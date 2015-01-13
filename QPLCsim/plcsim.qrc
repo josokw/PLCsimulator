@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/icon.png</file>
+        <file>images/red.xpm</file>
+        <file>images/fileopen.png</file>
+        <file>images/exit.png</file>
+        <file>images/new.png</file>
+        <file>images/open.png</file>
+        <file>images/save.png</file>
+        <file>images/save_as.png</file>
+        <file>images/01TC.ico</file>
+        <file>images/ICO64x64.ico</file>
+    </qresource>
+</RCC>
