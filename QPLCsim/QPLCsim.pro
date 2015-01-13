@@ -29,11 +29,11 @@ RESOURCES += plcsim.qrc
 
 unix {
     CONFIG(debug, debug|release) {
-        LIBS += -L../../_Debug/VirtualPLC -lVirtualPLCdebug
-        PRE_TARGETDEPS += ../../_Debug/VirtualPLC/libVirtualPLCdebug.a
+        LIBS += -L../../debug/VirtualPLC -lVirtualPLCdebug
+        PRE_TARGETDEPS += ../../debug/VirtualPLC/libVirtualPLCdebug.a
     }
     CONFIG(release, debug|release) {
-        LIBS += -L../../_Release/VirtualPLC -lVirtualPLC
-        PRE_TARGETDEPS += ../../_Release/VirtualPLC/libVirtualPLC.a
+        LIBS += -L../../release/VirtualPLC -lVirtualPLC
+        PRE_TARGETDEPS += ../../release/VirtualPLC/libVirtualPLC.a
     }
 }
