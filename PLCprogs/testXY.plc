@@ -1,0 +1,49 @@
+//---------------------------------------------------------- const declarations
+
+CONST INT time1 = 50;
+CONST INT time2 = 20;
+//CONST BOOL ready1 = false;
+//CONST BOOL ready2 = true;
+
+//---------------------------------------------------------------- declarations
+
+INT counter1 = 1111;
+BOOL input1 = false;
+BOOL input2 = false;
+BOOL input3 = false;
+BOOL input4 = false;
+BOOL output1 = false;
+BOOL output2 = false;
+BOOL output3 = false;
+BOOL output4 = false;
+INT counter2 = 9999;
+
+// Function blocks ------------------------------------------------------------
+
+TIMER_M TIMER0C(input1, time1);
+TIMER_M TIMER1C(TIMER0S, time2);
+
+// Mapping to I/O -------------------------------------------------------------
+
+X0 = input1;
+X1 = input2;
+X2 = input3;
+X3 = input4;
+Y0 = output1;
+Y1 = output2;
+Y2 = output3;
+Y3 = output4;
+
+// Ladder diagram and logic expressions ---------------------------------------
+
+  input1       output1
+---[]-------------()--------
+
+  input2       output2
+---[]-------------()--------
+
+  TIMER0S       output3
+---[]-------------()--------
+
+  TIMER1S               output4
+---[]----------------------()--------

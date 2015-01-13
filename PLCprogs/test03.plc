@@ -1,0 +1,51 @@
+//---------------------------------------------------------- const declarations
+
+CONST INT startvarblock = 1111;
+CONST INT endvarblock = 9999;
+
+//---------------------------------------------------------------- declarations
+
+INT counter1 = startvarblock;
+BOOL input0 = false;
+BOOL input1 = false;
+BOOL input2 = false;
+BOOL input3 = false;
+BOOL input4 = false;
+BOOL input5 = false;
+BOOL input6 = false;
+BOOL input7 = false;
+BOOL output0 = false;
+BOOL output1 = false;
+BOOL output2 = false;
+BOOL output3 = false;
+BOOL output4 = false;
+BOOL output5 = false;
+INT counter2 = endvarblock;
+
+// Function blocks ------------------------------------------------------------
+
+
+// Mapping to I/O -------------------------------------------------------------
+
+X0 = input0;
+X1 = input1;
+X2 = input2;
+X3 = input3;
+X4 = input4;
+X5 = input5;
+X6 = input6;
+X7 = input7;
+Y0 = output0;
+Y1 = output1;
+Y2 = output2;
+Y3 = output3;
+Y4 = output4;
+Y5 = output5;
+
+// Ladder diagram and logic expressions ---------------------------------------
+
+  input0       output0   output1
+---[]-------------()--------()-----
+
+  input1       output2   output3   output4  output5
+---[]-------------()--------()-------()-------()----
