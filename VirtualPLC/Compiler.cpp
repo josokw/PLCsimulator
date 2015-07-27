@@ -50,7 +50,7 @@ bool Compiler::readFile(const std::string& fileName)
    return true;
 }
 
-bool Compiler::writeFile(const std::string& fileName)
+bool Compiler::writeFile(const std::string& fileName) const
 {
    _plcScriptFileOut.open(fileName.c_str());
    if (!_plcScriptFileOut) {
@@ -72,7 +72,6 @@ bool Compiler::readBinFile(const std::string& fileName)
       return false;
    }
    //copy(istream_iterator<char>(plcScript), istream_iterator<char>(), ostream_iterator(plcScriptFileOut));
-
    for (int i = 0; i < MemoryConfig::MEM_SIZE; ++i) {
       _plcBinFileOut << _memory[i].integer;
    }
@@ -80,7 +79,7 @@ bool Compiler::readBinFile(const std::string& fileName)
    return true;
 }
 
-bool Compiler::writeBinFile(const std::string& fileName)
+bool Compiler::writeBinFile(const std::string& fileName) const
 {
    _plcBinFileOut.open(fileName.c_str());
    if (!_plcBinFileOut) {

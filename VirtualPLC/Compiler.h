@@ -26,9 +26,9 @@ public:
 
   void clear();
   bool readFile(const std::string& fileName);
-  bool writeFile(const std::string& fileName);
+  bool writeFile(const std::string& fileName) const;
   bool readBinFile(const std::string& fileName);
-  bool writeBinFile(const std::string& fileName);
+  bool writeBinFile(const std::string& fileName) const;
   void loadMemory(const Memory& mem);
   void parse();
   const char* getScript() const { return &_plcScript[0]; }
@@ -41,9 +41,9 @@ private:
   bool _memoryContainsErrors;
   std::vector<message_t> _messages;
   std::ifstream _plcScriptFile;
-  std::ofstream _plcScriptFileOut;
+  mutable std::ofstream _plcScriptFileOut;
   std::ifstream _plcBinFile;
-  std::ofstream _plcBinFileOut;
+  mutable std::ofstream _plcBinFileOut;
   std::vector<char> _plcScript;
   /// Memory contains compiler output.
   Memory _memory;
