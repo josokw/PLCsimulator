@@ -2,7 +2,7 @@
 
 TEMPLATE = subdirs
 SUBDIRS = VirtualPLC \
+          CompilerPLC \
           QPLCsim
-CONFIG += ordered
 
-          
+CONFIG += ordered

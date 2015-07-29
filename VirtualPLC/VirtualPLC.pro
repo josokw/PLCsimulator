@@ -20,8 +20,7 @@ SOURCES += \
     ProcessorConfig.cpp \
     Processor.cpp \
     Memory.cpp \
-    Counter.cpp \
-    Compiler.cpp
+    Counter.cpp
 
 HEADERS += \
     LibInfo.h \
@@ -34,9 +33,7 @@ HEADERS += \
     FunctionConfig.h \
     Data.h \
     Counter.h \
-    Compiler.h \
-    PeriodicTask.h \
-    Parser.h
+    PeriodicTask.h
 
 #unix {
 #    target.path = /usr/lib
