@@ -154,10 +154,9 @@ struct VirtualPLCBuilder
   {
     std::queue<string> RPN(exprOutputRPN);
     std::cout << "*** [Parser] expression RPN: ";
-    while (!RPN.empty())
-    {
+    while (!RPN.empty()) {
       string s(RPN.front());
-      std:: cout << s << " ";
+      cout << s << " ";
       RPN.pop();
     }
     std::cout << std::endl;
@@ -189,9 +188,8 @@ struct VirtualPLCBuilder
     }
 
     int iValue = 0;
-    symbolData_t* pLhs = find(symbolsData, lhs.c_str());
-    if (pLhs)
-    {
+    auto pLhs = find(symbolsData, lhs.c_str());
+    if (pLhs) {
       messages.push_back(Compiler::message_t('E', 0, begin,
                                              "'" + lhs + "' already exists!"));
     }
@@ -229,9 +227,8 @@ struct VirtualPLCBuilder
       else
       {
         // Intialisation by a const var value (in rhs)
-        symbolData_t* pRhs = find(symbolsData, rhs.c_str());
-        if (0 == pRhs)
-        {
+        auto pRhs = find(symbolsData, rhs.c_str());
+        if (nullptr == pRhs) {
           messages.push_back(Compiler::message_t('E', 0, begin,
                                                  "Constant '" + rhs
                                                  + "' does not exists!"));
@@ -288,8 +285,8 @@ struct VirtualPLCBuilder
       {
         cout << "[Parser] " << string(begin, end) << " " << timerIndex << " "
              << parList[0] << " " << timerValue << endl;
-        symbolData_t* p0 = find(symbolsData, parList[0].c_str());
-        if (0 == p0) {
+        auto p0 = find(symbolsData, parList[0].c_str());
+        if (nullptr == p0) {
           messages.push_back(Compiler::message_t('E', 0, begin,
                                                  "Parameter '" + parList[0]
                              + "' does not exists!"));
@@ -306,23 +303,21 @@ struct VirtualPLCBuilder
       {
         cout << "[Parser] " << string(begin, end) << "  " << timerIndex << " "
              << parList[0] << " " << parList[1] << endl;
-        symbolData_t* p0 = find(symbolsData, parList[0].c_str());
-        if (0 == p0)
+        auto p0 = find(symbolsData, parList[0].c_str());
+        if (nullptr == p0)
         {
           messages.push_back(Compiler::message_t('E', 0, begin,
                                                  "Parameter '" + parList[0]
                              + "' does not exists!"));
         }
-        symbolData_t* p1 = find(symbolsData, parList[1].c_str());
-        if (0 == p1)
-        {
+        auto p1 = find(symbolsData, parList[1].c_str());
+        if (nullptr == p1) {
           messages.push_back(Compiler::message_t('E', 0, begin,
                                                  "Parameter '" + parList[1]
                              + "' does not exists!"));
         }
         // Compile
-        if (p0 != 0 && p1 != 0)
-        {
+        if (p0 != nullptr && p1 != nullptr) {
           memory[timerOffset + timerIndex * MemoryConfig::TIMER_SIZE
               + FunctionConfig::TEnable] = memory[p0->data];
           memory[timerOffset + timerIndex * MemoryConfig::TIMER_SIZE
@@ -371,8 +366,7 @@ struct VirtualPLCBuilder
   {
     int counterOffset = MemoryConfig::COUNTERS;
 
-    if (counterIndex > (MemoryConfig::nCOUNTERS - 1))
-    {
+    if (counterIndex > (MemoryConfig::nCOUNTERS - 1)) {
       string cI(1, '0'+ counterIndex);
       messages.push_back(Compiler::message_t('E', 0, begin,
                                              "Counter" + cI
@@ -380,13 +374,11 @@ struct VirtualPLCBuilder
     }
     else
     {
-      if (parList.size() == 1)
-      {
+      if (parList.size() == 1) {
         cout << "[Parser] " << string(begin, end) << " " << counterIndex << " "
              << parList[0] << " " << counterValue << endl;
-        symbolData_t* p0 = find(symbolsData, parList[0].c_str());
-        if (0 == p0)
-        {
+        auto p0 = find(symbolsData, parList[0].c_str());
+        if (nullptr == p0) {
           messages.push_back(Compiler::message_t('E', 0, begin,
                                                  "Parameter '"
                                                  + parList[0]
@@ -404,23 +396,20 @@ struct VirtualPLCBuilder
       {
         cout << "[Parser] " << string(begin, end) << "  " << counterIndex << " "
              << parList[0] << " " << parList[1] << endl;
-        symbolData_t* p0 = find(symbolsData, parList[0].c_str());
-        if (0 == p0)
-        {
+        auto p0 = find(symbolsData, parList[0].c_str());
+        if (nullptr == p0) {
           messages.push_back(Compiler::message_t('E', 0, begin,
                                                  "Parameter '" + parList[0]
                              + "' does not exists!"));
         }
-        symbolData_t* p1 = find(symbolsData, parList[1].c_str());
-        if (0 == p1)
-        {
+        auto p1 = find(symbolsData, parList[1].c_str());
+        if (nullptr == p1) {
           messages.push_back(Compiler::message_t('E', 0, begin,
                                                  "Parameter '" + parList[1]
                              + "' does not exists!"));
         }
         // Compile
-        if (p0 != 0 && p1 != 0)
-        {
+        if (p0 != nullptr && p1 != nullptr) {
           memory[counterOffset + counterIndex * MemoryConfig::COUNTER_SIZE
               + FunctionConfig::CEnable] = memory[p0->data];
           memory[counterOffset + counterIndex * MemoryConfig::COUNTER_SIZE
@@ -469,9 +458,8 @@ struct VirtualPLCBuilder
   void do_mapping(const char* begin, const char* /* end */)
   {
     std::cout << "*** [Parser] mapping " << XY << index << " = " << identifier << std::endl;
-    symbolData_t* p = find(symbolsData, identifier.c_str());
-    if (0 == p)
-    {
+    auto p = find(symbolsData, identifier.c_str());
+    if (nullptr == p) {
       messages.push_back(Compiler::message_t('E', 0, begin,
                                              "'" + identifier
                                              + "' does not exists!"));
@@ -512,9 +500,8 @@ struct VirtualPLCBuilder
     else
     {
       //exprOperatorStack.push(identifier);
-      symbolData_t* p0 = find(symbolsData, identifier.c_str());
-      if (0 == p0 || p0->qualifier != "COMPARATOR")
-      {
+      auto p0 = find(symbolsData, identifier.c_str());
+      if (nullptr == p0 || p0->qualifier != "COMPARATOR") {
         messages.push_back(Compiler::message_t('E', 0, begin,
                                                "Unknown function block '"
                                                + identifier + "'"));
@@ -530,7 +517,7 @@ struct VirtualPLCBuilder
         }
         else
         {
-          std::vector<string>::const_iterator it = parList.begin();
+          auto it = parList.cbegin();
           while (it != parList.end())
           {
             exprOutputRPN.push(*it);
@@ -564,15 +551,13 @@ struct VirtualPLCBuilder
   {
     string Operator(begin, end);
     std::cout << "*** [Parser] to opStack '" << Operator  << "'" << std::endl;
-    if (Operator == "NOT" || Operator == "(")
-    {
+    if (Operator == "NOT" || Operator == "(") {
       exprOperatorStack.push(Operator);
     }
     else
     {
       symbolData_t* p1 = find(symbolsData, Operator.c_str());
-      if (p1->qualifier == "COMPARATOR")
-      {
+      if (p1->qualifier == "COMPARATOR") {
         exprOutputRPN.push(Operator);
       }
       else
@@ -632,7 +617,7 @@ struct VirtualPLCBuilder
     // Compile RPN representation of expression
     while (!exprOutputRPN.empty())
     {
-      symbolData_t* p0 = find(symbolsData, exprOutputRPN.front().c_str());
+      auto p0 = find(symbolsData, exprOutputRPN.front().c_str());
       if (p0)
       {
         if (p0->qualifier == "" || p0->qualifier == "CONST")
@@ -681,9 +666,8 @@ struct VirtualPLCBuilder
   {
     std::string id(begin, end);
     std::cout << "*** [Parser] to coils queue '" << id << "'" << std::endl;
-    symbolData_t* p = find(symbolsData, id.c_str());
-    if (0 == p)
-    {
+    auto p = find(symbolsData, id.c_str());
+    if (nullptr == p) {
       messages.push_back(Compiler::message_t('E', 0, begin,
                                              "Variable '" + id
                                              + "' does not exists!"));
@@ -697,7 +681,7 @@ struct VirtualPLCBuilder
     {
       std::cout << "*** [Parser] Normal coil '" << coils.front() << "'"
                 << std::endl;
-      symbolData_t* p = find(symbolsData, coils.front().c_str());
+      auto p = find(symbolsData, coils.front().c_str());
       if (p)
       {
         memory.addNextCODE(processorConfig.getIC("SCNM"));
@@ -725,9 +709,8 @@ struct VirtualPLCBuilder
     {
       std::cout << "*** [Parser] Negation coil '" << coils.front() << "'"
                 << std::endl;
-      symbolData_t* p = find(symbolsData, coils.front().c_str());
-      if (p)
-      {
+      auto p = find(symbolsData, coils.front().c_str());
+      if (p) {
         memory.addNextCODE(processorConfig.getIC("SCNG"));
         memory.addNextCODE(p->data);
       }
@@ -753,9 +736,8 @@ struct VirtualPLCBuilder
     {
       std::cout << "*** [Parser] Set coil '" << coils.front() << "'"
                 << std::endl;
-      symbolData_t* p = find(symbolsData, coils.front().c_str());
-      if (p)
-      {
+      auto p = find(symbolsData, coils.front().c_str());
+      if (p) {
         memory.addNextCODE(processorConfig.getIC("SCST"));
         memory.addNextCODE(p->data);
       }
@@ -781,9 +763,8 @@ struct VirtualPLCBuilder
     {
       std::cout << "*** [Parser] Reset coil '" << coils.front() << "'"
                 << std::endl;
-      symbolData_t* p = find(symbolsData, coils.front().c_str());
-      if (p)
-      {
+      auto p = find(symbolsData, coils.front().c_str());
+      if (p) {
         memory.addNextCODE(processorConfig.getIC("SCRS"));
         memory.addNextCODE(p->data);
       }
@@ -805,8 +786,7 @@ struct VirtualPLCBuilder
 
   void do_ladderDiagram(const char* begin, const char* /* end */)
   {
-    if (coils.empty())
-    {
+    if (coils.empty()) {
       memory.addNextCODE(processorConfig.getIC("SDROP"));
     }
     else
