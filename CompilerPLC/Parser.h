@@ -11,6 +11,7 @@
 #include "ProcessorConfig.h"
 
 #include <iostream>
+#include <functional>
 #include <queue>
 #include <sstream>
 #include <stack>
@@ -25,9 +26,6 @@
 #include <boost/spirit/include/classic_if.hpp>
 
 #include <boost/bind.hpp>
-#include <boost/function.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/tuple/tuple.hpp>
 
 using namespace std;
 using namespace boost::spirit::classic;
@@ -75,27 +73,27 @@ struct VirtualPLCBuilder
 
   symbols<symbolData_t> symbolsData;
 
-  boost::function<void(const char*, const char*)> info;
-  boost::function<void(const char*, const char*)> declaration;
-  boost::function<void(const char*, const char*)> timerDeclaration;
-  boost::function<void(const char*, const char*)> counterDeclaration;
-  boost::function<void(const char*, const char*)> mapping;
-  boost::function<void(const char*, const char*)> factor;
-  boost::function<void(const char*, const char*)> expression;
-  boost::function<void(const char*, const char*)> exprAddToOutput;
-  boost::function<void(const char*, const char*)> exprAddToOperatorStack;
-  boost::function<void(const char*, const char*)> rparen;
-  boost::function<void(const char*, const char*)> compileRPN;
-  boost::function<void(const char*, const char*)> negationContact;
-  boost::function<void(const char*, const char*)> addCoilID;
-  boost::function<void(const char*, const char*)> normalCoil;
-  boost::function<void(const char*, const char*)> negationCoil;
-  boost::function<void(const char*, const char*)> setCoil;
-  boost::function<void(const char*, const char*)> resetCoil;
-  boost::function<void(const char*, const char*)> ladderDiagram;
-  boost::function<void(const char*, const char*)> terminate;
+  function<void(const char*, const char*)> info;
+  function<void(const char*, const char*)> declaration;
+  function<void(const char*, const char*)> timerDeclaration;
+  function<void(const char*, const char*)> counterDeclaration;
+  function<void(const char*, const char*)> mapping;
+  function<void(const char*, const char*)> factor;
+  function<void(const char*, const char*)> expression;
+  function<void(const char*, const char*)> exprAddToOutput;
+  function<void(const char*, const char*)> exprAddToOperatorStack;
+  function<void(const char*, const char*)> rparen;
+  function<void(const char*, const char*)> compileRPN;
+  function<void(const char*, const char*)> negationContact;
+  function<void(const char*, const char*)> addCoilID;
+  function<void(const char*, const char*)> normalCoil;
+  function<void(const char*, const char*)> negationCoil;
+  function<void(const char*, const char*)> setCoil;
+  function<void(const char*, const char*)> resetCoil;
+  function<void(const char*, const char*)> ladderDiagram;
+  function<void(const char*, const char*)> terminate;
 
-  VirtualPLCBuilder* self() {return this;}
+  VirtualPLCBuilder* self() { return this; }
 
   VirtualPLCBuilder(std::vector<Compiler::message_t>& messages)
     :  messages(messages)
@@ -340,8 +338,7 @@ struct VirtualPLCBuilder
           memory.dump(cerr);
         }
       }
-      std::string timerName("TIMER"
-                            + boost::lexical_cast<std::string>(timerIndex));
+      std::string timerName("TIMER" + to_string(timerIndex));
       {
         std::string timerNameSub(timerName + "N");
         boost::spirit::classic::add(symbolsData, timerNameSub.c_str(),
@@ -440,7 +437,7 @@ struct VirtualPLCBuilder
           memory.dump(cerr);
         }
       }
-      std::string counterName("COUNTER" + boost::lexical_cast<std::string>(counterIndex));
+      std::string counterName("COUNTER" + to_string(counterIndex));
       {
         std::string counterNameSub(counterName + "N");
         boost::spirit::classic::add(symbolsData, counterNameSub.c_str(),
