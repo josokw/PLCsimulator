@@ -25,12 +25,11 @@
 #include <boost/spirit/include/classic_symbols.hpp>
 #include <boost/spirit/include/classic_if.hpp>
 
-#include <boost/bind.hpp>
-
 using namespace std;
+using namespace std::placeholders;
 using namespace boost::spirit::classic;
 
-/// This structure contains all semantic actions for the PLCscript parser.
+/// This structure contains all semantic actions for the PLC script parser.
 struct VirtualPLCBuilder
 {
   std::vector<Compiler::message_t>& messages;
@@ -65,14 +64,12 @@ struct VirtualPLCBuilder
       ,  type(t)
       ,  data(d)
     {}
-
     std::string qualifier;
     std::string type;
     int data;
   } symbolData_t;
 
   symbols<symbolData_t> symbolsData;
-
   function<void(const char*, const char*)> info;
   function<void(const char*, const char*)> declaration;
   function<void(const char*, const char*)> timerDeclaration;
@@ -101,25 +98,26 @@ struct VirtualPLCBuilder
     ,  processor(&memory, 0)
     ,  tmpvarIndex(0)
     ,  isFunction(false)
-    ,  info(boost::bind(&VirtualPLCBuilder::do_info, self(), _1, _2))
-    ,  declaration(boost::bind(&VirtualPLCBuilder::do_declaration, self(), _1, _2))
-    ,  timerDeclaration(boost::bind(&VirtualPLCBuilder::do_timerDeclaration, self(), _1, _2))
-    ,  counterDeclaration(boost::bind(&VirtualPLCBuilder::do_counterDeclaration, self(), _1, _2))
-    ,  mapping(boost::bind(&VirtualPLCBuilder::do_mapping, self(), _1, _2))
-    ,  factor(boost::bind(&VirtualPLCBuilder::do_factor, self(), _1, _2))
-    ,  expression(boost::bind(&VirtualPLCBuilder::do_expression, self(), _1, _2))
-    ,  exprAddToOutput(boost::bind(&VirtualPLCBuilder::do_exprAddToOutput, self(), _1, _2))
-    ,  exprAddToOperatorStack(boost::bind(&VirtualPLCBuilder::do_exprAddToOperatorStack, self(), _1, _2))
-    ,  rparen(boost::bind(&VirtualPLCBuilder::do_rparen, self(), _1, _2))
-    ,  compileRPN(boost::bind(&VirtualPLCBuilder::do_compileRPN, self(), _1, _2))
-    ,  negationContact(boost::bind(&VirtualPLCBuilder::do_negationContact, self(), _1, _2))
-    ,  addCoilID(boost::bind(&VirtualPLCBuilder::do_addCoilID, self(), _1, _2))
-    ,  normalCoil(boost::bind(&VirtualPLCBuilder::do_normalCoil, self(), _1, _2))
-    ,  negationCoil(boost::bind(&VirtualPLCBuilder::do_negationCoil, self(), _1, _2))
-    ,  setCoil(boost::bind(&VirtualPLCBuilder::do_setCoil, self(), _1, _2))
-    ,  resetCoil(boost::bind(&VirtualPLCBuilder::do_resetCoil, self(), _1, _2))
-    ,  ladderDiagram(boost::bind(&VirtualPLCBuilder::do_ladderDiagram, self(), _1, _2))
-    ,  terminate(boost::bind(&VirtualPLCBuilder::do_terminate, self(), _1, _2))
+    ,  symbolsData()
+    ,  info(bind(&VirtualPLCBuilder::do_info, self(), _1, _2))
+    ,  declaration(bind(&VirtualPLCBuilder::do_declaration, self(), _1, _2))
+    ,  timerDeclaration(bind(&VirtualPLCBuilder::do_timerDeclaration, self(), _1, _2))
+    ,  counterDeclaration(bind(&VirtualPLCBuilder::do_counterDeclaration, self(), _1, _2))
+    ,  mapping(bind(&VirtualPLCBuilder::do_mapping, self(), _1, _2))
+    ,  factor(bind(&VirtualPLCBuilder::do_factor, self(), _1, _2))
+    ,  expression(bind(&VirtualPLCBuilder::do_expression, self(), _1, _2))
+    ,  exprAddToOutput(bind(&VirtualPLCBuilder::do_exprAddToOutput, self(), _1, _2))
+    ,  exprAddToOperatorStack(bind(&VirtualPLCBuilder::do_exprAddToOperatorStack, self(), _1, _2))
+    ,  rparen(bind(&VirtualPLCBuilder::do_rparen, self(), _1, _2))
+    ,  compileRPN(bind(&VirtualPLCBuilder::do_compileRPN, self(), _1, _2))
+    ,  negationContact(bind(&VirtualPLCBuilder::do_negationContact, self(), _1, _2))
+    ,  addCoilID(bind(&VirtualPLCBuilder::do_addCoilID, self(), _1, _2))
+    ,  normalCoil(bind(&VirtualPLCBuilder::do_normalCoil, self(), _1, _2))
+    ,  negationCoil(bind(&VirtualPLCBuilder::do_negationCoil, self(), _1, _2))
+    ,  setCoil(bind(&VirtualPLCBuilder::do_setCoil, self(), _1, _2))
+    ,  resetCoil(bind(&VirtualPLCBuilder::do_resetCoil, self(), _1, _2))
+    ,  ladderDiagram(bind(&VirtualPLCBuilder::do_ladderDiagram, self(), _1, _2))
+    ,  terminate(bind(&VirtualPLCBuilder::do_terminate, self(), _1, _2))
   {
     memory.addNextCODE(processorConfig.getIC("LATCH"));
     memory.addNextCODE(processorConfig.getIC("CCNTS"));

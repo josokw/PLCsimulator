@@ -22,10 +22,6 @@ Compiler::Compiler()
 {
 }
 
-Compiler::~Compiler()
-{
-}
-
 void Compiler::clear()
 {
    _messages.clear();
@@ -56,11 +52,12 @@ bool Compiler::writeFile(const std::string& fileName) const
    if (!_plcScriptFileOut) {
       return false;
    }
-   //copy(istream_iterator<char>(plcScript), istream_iterator<char>(), ostream_iterator(plcScriptFileOut));
-
-   for (size_t i = 0; i < _plcScript.size(); ++i) {
-      _plcScriptFileOut << _plcScript[i];
+   for(const auto& s: _plcScript) {
+      _plcScriptFileOut << s;
    }
+   //for (size_t i = 0; i < _plcScript.size(); ++i) {
+   //   _plcScriptFileOut << _plcScript[i];
+   //}
    _plcScriptFileOut.close();
    return true;
 }

@@ -22,7 +22,7 @@ public:
   typedef std::tuple<char, int, const char*, std::string> message_t;
 
   Compiler();
-  virtual ~Compiler();
+  virtual ~Compiler() = default;
 
   void clear();
   bool readFile(const std::string& fileName);
