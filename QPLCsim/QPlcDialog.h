@@ -16,7 +16,7 @@ class QPlcDialog: public QFrame
   Q_OBJECT
 
 public:
-  QPlcDialog(VirtualPLC* plc, QWidget* parent = 0, Qt::WindowFlags f = 0);
+  QPlcDialog(VirtualPLC* plc, QWidget* parent = nullptr, Qt::WindowFlags f = 0);
 
   void connectToPLC(VirtualPLC* plc);
 

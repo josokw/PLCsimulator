@@ -12,7 +12,7 @@ class QScriptEditor : public QPlainTextEdit
    Q_OBJECT
 
 public:
-   QScriptEditor(QWidget* parent = 0);
+   QScriptEditor(QWidget* parent = nullptr);
    ~QScriptEditor();
 
    void lineNumberBarPaintEvent(QPaintEvent* event);

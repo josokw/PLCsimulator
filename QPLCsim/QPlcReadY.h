@@ -14,7 +14,7 @@ class QPlcReadY: public QThread
    Q_OBJECT
 
 public:
-   QPlcReadY(VirtualPLC* plc, int* Ystatus, bool* runStatus, QPlcDialog* dialog, QObject* parent = 0);
+   QPlcReadY(VirtualPLC* plc, int* Ystatus, bool* runStatus, QPlcDialog* dialog, QObject* parent = nullptr);
    ~QPlcReadY();
 
    virtual void run();

@@ -12,7 +12,7 @@ class QSyntaxHL : public QSyntaxHighlighter
   Q_OBJECT
 
 public:
-  explicit QSyntaxHL(QTextDocument* parent = 0);
+  explicit QSyntaxHL(QTextDocument* parent = nullptr);
 protected:
   virtual void highlightBlock(const QString &text) override;
 private:
