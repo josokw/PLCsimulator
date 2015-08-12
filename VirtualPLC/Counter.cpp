@@ -3,44 +3,44 @@
 #include "Memory.h"
 
 Counter::Counter()
-  :  _memory{nullptr}
+  :  _pMemory{nullptr}
   ,  _id{0}
 {
 }
 
 void Counter::mapToMemory(Memory& mem, int offst)
 {
-   _memory = &mem;
+   _pMemory = &mem;
    _offset = offst;
    _CEnable = _offset + FunctionConfig::CEnable;
    _CValue = _offset + FunctionConfig::CValue;
    _CN = _offset + FunctionConfig::CN;
    _CS = _offset + FunctionConfig::CS;
    _CC = _offset + FunctionConfig::CC;
-   (*_memory)[_CEnable].actual = false;
-   (*_memory)[_CEnable].previous = false;
-   (*_memory)[_CValue].integer = 0;
-   (*_memory)[_CN].integer = 0;
-   (*_memory)[_CS].actual = false;
-   (*_memory)[_CC].actual = false;
-   (*_memory)[_CC].previous = true;
+   (*_pMemory)[_CEnable].actual = false;
+   (*_pMemory)[_CEnable].previous = false;
+   (*_pMemory)[_CValue].integer = 0;
+   (*_pMemory)[_CN].integer = 0;
+   (*_pMemory)[_CS].actual = false;
+   (*_pMemory)[_CC].actual = false;
+   (*_pMemory)[_CC].previous = true;
 }
 
 void Counter::checkReset()
 {
-   if ((*_memory)[_CC].actual == false)
+   if ((*_pMemory)[_CC].actual == false)
    {
-      (*_memory)[_CN].integer = 0;
-      (*_memory)[_CC].set(true);
+      (*_pMemory)[_CN].integer = 0;
+      (*_pMemory)[_CC].set(true);
    }
 }
 
 void Counter::checkIncrement()
 {
-   if ((*_memory)[_CEnable].risingEdge())
+   if ((*_pMemory)[_CEnable].risingEdge())
    {
-      ++((*_memory)[_CN].integer);
-      (*_memory)[_CEnable].set(false);
+      ++((*_pMemory)[_CN].integer);
+      (*_pMemory)[_CEnable].set(false);
    }
-   (*_memory)[_CS].set((*_memory)[_CN].integer >= (*_memory)[_CValue].integer);
+   (*_pMemory)[_CS].set((*_pMemory)[_CN].integer >= (*_pMemory)[_CValue].integer);
 }

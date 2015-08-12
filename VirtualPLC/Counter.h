@@ -17,7 +17,7 @@ public:
   /// Check increment
   void checkIncrement();
 private:
-  Memory *_memory;
+  Memory *_pMemory;
   int _id;
   int _offset;
   int _CEnable;
