@@ -18,6 +18,7 @@
 
 /// A VirtualPLC contains a processor, memory, timers and counters,
 /// and is able to execute the program stored in memory.
+/// Timers and counters are mapped to memory.
 /// Based on Mitsubishi Melsec PLC: FX1N
 class VirtualPLC
 {

@@ -3,8 +3,8 @@
 #include "Memory.h"
 
 Counter::Counter()
-:  _memory(0)
-,  _id(0)
+  :  _memory{nullptr}
+  ,  _id{0}
 {
 }
 

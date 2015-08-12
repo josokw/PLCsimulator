@@ -9,12 +9,12 @@
 using namespace std;
 
 Memory::Memory()
-  :  _outOfMemory(false)
-  ,  _memory()
-  ,  _constAddress(MemoryConfig::CONSTANTS)
-  ,  _varAddress(MemoryConfig::VARS)
-  ,  _tmpvarAddress(MemoryConfig::TMPVARS)
-  ,  _codeAddress(MemoryConfig::ENTRYPOINT)
+  :  _outOfMemory{false}
+  ,  _memory{0}
+  ,  _constAddress{MemoryConfig::CONSTANTS}
+  ,  _varAddress{MemoryConfig::VARS}
+  ,  _tmpvarAddress{MemoryConfig::TMPVARS}
+  ,  _codeAddress{MemoryConfig::ENTRYPOINT}
 {
   clear();
 }
