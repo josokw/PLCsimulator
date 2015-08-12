@@ -1,5 +1,5 @@
-#ifndef LIBINFO_H
-#define LIBINFO_H
+#ifndef LIBINFOVPLC_H
+#define LIBINFOVPLC_H
 
 #include <string>
 
@@ -15,4 +15,4 @@ const std::string libVersion{libMajorVersion
                              + "." + libRevisionVersion};
 }
 
-#endif // LIBINFO_H
+#endif // LIBINFOVPLC_H

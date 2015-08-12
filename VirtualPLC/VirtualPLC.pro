@@ -22,7 +22,6 @@ SOURCES += \
     Counter.cpp
 
 HEADERS += \
-    LibInfo.h \
     VirtualPLC.h \
     Timer.h \
     ProcessorConfig.h \
@@ -32,7 +31,8 @@ HEADERS += \
     FunctionConfig.h \
     Data.h \
     Counter.h \
-    PeriodicTask.h
+    PeriodicTask.h \
+    LibInfoVPLC.h
 
 #unix {
 #    target.path = /usr/lib

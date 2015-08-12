@@ -13,9 +13,10 @@
 #include "AppInfo.h"
 #include "QPlcDialog.h"
 // VirtualPLC lib headers
-#include "LibInfo.h"
-#include "MemoryConfig.h"
-#include "ProcessorConfig.h"
+#include "LibInfoVPLC.h"
+//#include "MemoryConfig.h"
+//#include "ProcessorConfig.h"
+#include "LibInfoCPLC.h"
 
 using namespace std;
 //-- widgets
@@ -698,8 +699,10 @@ void MainWindow::about()
                         "<p>This apllication uses:</p>"
                         "<p>- Qt version ")
                      .append(QT_VERSION_STR)
-                     .append("</p><p>- VirtualPLC C++ lib version ")
+                     .append("</p><p>- VirtualPLC C++ library version ")
                      .append(vplc::libVersion.c_str())
+                     .append("</p><p>- CompilerPLC C++ library version ")
+                     .append(cplc::libVersion.c_str())
                      .append("</p><p>- Boost C++ libraries version ")
                      .append(bv).append("\n</p>"));
 }

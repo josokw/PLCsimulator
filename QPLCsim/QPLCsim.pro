@@ -7,6 +7,8 @@ CONFIG += c++11
 
 INCLUDEPATH += ../../VirtualPLC
 DEPENDPATH += ../../VirtualPLC
+INCLUDEPATH += ../../CompilerPLC
+DEPENDPATH += ../../CompilerPLC
 
 SOURCES += main.cpp \
     mainwindow.cpp \

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 
-#include "LibInfo.h"
+#include "LibInfoVPLC.h"
 #include "Memory.h"
 #include "MemoryConfig.h"
 

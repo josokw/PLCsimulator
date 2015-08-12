@@ -25,7 +25,8 @@ SOURCES += \
 
 HEADERS += \
    Compiler.h \
-   Parser.h
+   Parser.h \
+   LibInfoCPLC.h
 
 #unix {
 #    target.path = /usr/lib
