@@ -11,14 +11,14 @@ using namespace std;
 namespace bsp = boost::spirit::classic;
 
 Compiler::Compiler()
-   :  _memoryContainsErrors(false)
-   ,  _messages()
-   ,  _plcScriptFile()
-   ,  _plcScriptFileOut()
-   ,  _plcBinFile()
-   ,  _plcBinFileOut()
-   ,  _plcScript()
-   ,  _memory()
+   :  _memoryContainsErrors{false}
+   ,  _messages{}
+   ,  _plcScriptFile{}
+   ,  _plcScriptFileOut{}
+   ,  _plcBinFile{}
+   ,  _plcBinFileOut{}
+   ,  _plcScript{}
+   ,  _memory{}
 {
 }
 

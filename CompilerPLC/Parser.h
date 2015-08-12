@@ -25,9 +25,8 @@
 #include <boost/spirit/include/classic_symbols.hpp>
 #include <boost/spirit/include/classic_if.hpp>
 
-using namespace std;
 using namespace std::placeholders;
-using namespace boost::spirit::classic;
+namespace bsp = boost::spirit::classic;
 
 /// This structure contains all semantic actions for the PLC script parser.
 struct VirtualPLCBuilder
@@ -57,7 +56,7 @@ struct VirtualPLCBuilder
   std::stack<std::string> exprOperatorStack;
   std::queue<std::string> coils;
 
-  typedef struct symbolData
+  using symbolData_t = struct symbolData
   {
     symbolData(const std::string& q, const std::string& t, int d)
       :  qualifier(q)
@@ -67,28 +66,28 @@ struct VirtualPLCBuilder
     std::string qualifier;
     std::string type;
     int data;
-  } symbolData_t;
+  };
 
-  symbols<symbolData_t> symbolsData;
-  function<void(const char*, const char*)> info;
-  function<void(const char*, const char*)> declaration;
-  function<void(const char*, const char*)> timerDeclaration;
-  function<void(const char*, const char*)> counterDeclaration;
-  function<void(const char*, const char*)> mapping;
-  function<void(const char*, const char*)> factor;
-  function<void(const char*, const char*)> expression;
-  function<void(const char*, const char*)> exprAddToOutput;
-  function<void(const char*, const char*)> exprAddToOperatorStack;
-  function<void(const char*, const char*)> rparen;
-  function<void(const char*, const char*)> compileRPN;
-  function<void(const char*, const char*)> negationContact;
-  function<void(const char*, const char*)> addCoilID;
-  function<void(const char*, const char*)> normalCoil;
-  function<void(const char*, const char*)> negationCoil;
-  function<void(const char*, const char*)> setCoil;
-  function<void(const char*, const char*)> resetCoil;
-  function<void(const char*, const char*)> ladderDiagram;
-  function<void(const char*, const char*)> terminate;
+  bsp::symbols<symbolData_t> symbolsData;
+  std::function<void(const char*, const char*)> info;
+  std::function<void(const char*, const char*)> declaration;
+  std::function<void(const char*, const char*)> timerDeclaration;
+  std::function<void(const char*, const char*)> counterDeclaration;
+  std::function<void(const char*, const char*)> mapping;
+  std::function<void(const char*, const char*)> factor;
+  std::function<void(const char*, const char*)> expression;
+  std::function<void(const char*, const char*)> exprAddToOutput;
+  std::function<void(const char*, const char*)> exprAddToOperatorStack;
+  std::function<void(const char*, const char*)> rparen;
+  std::function<void(const char*, const char*)> compileRPN;
+  std::function<void(const char*, const char*)> negationContact;
+  std::function<void(const char*, const char*)> addCoilID;
+  std::function<void(const char*, const char*)> normalCoil;
+  std::function<void(const char*, const char*)> negationCoil;
+  std::function<void(const char*, const char*)> setCoil;
+  std::function<void(const char*, const char*)> resetCoil;
+  std::function<void(const char*, const char*)> ladderDiagram;
+  std::function<void(const char*, const char*)> terminate;
 
   VirtualPLCBuilder* self() { return this; }
 
@@ -99,65 +98,63 @@ struct VirtualPLCBuilder
     ,  tmpvarIndex(0)
     ,  isFunction(false)
     ,  symbolsData()
-    ,  info(bind(&VirtualPLCBuilder::do_info, self(), _1, _2))
-    ,  declaration(bind(&VirtualPLCBuilder::do_declaration, self(), _1, _2))
-    ,  timerDeclaration(bind(&VirtualPLCBuilder::do_timerDeclaration, self(), _1, _2))
-    ,  counterDeclaration(bind(&VirtualPLCBuilder::do_counterDeclaration, self(), _1, _2))
-    ,  mapping(bind(&VirtualPLCBuilder::do_mapping, self(), _1, _2))
-    ,  factor(bind(&VirtualPLCBuilder::do_factor, self(), _1, _2))
-    ,  expression(bind(&VirtualPLCBuilder::do_expression, self(), _1, _2))
-    ,  exprAddToOutput(bind(&VirtualPLCBuilder::do_exprAddToOutput, self(), _1, _2))
-    ,  exprAddToOperatorStack(bind(&VirtualPLCBuilder::do_exprAddToOperatorStack, self(), _1, _2))
-    ,  rparen(bind(&VirtualPLCBuilder::do_rparen, self(), _1, _2))
-    ,  compileRPN(bind(&VirtualPLCBuilder::do_compileRPN, self(), _1, _2))
-    ,  negationContact(bind(&VirtualPLCBuilder::do_negationContact, self(), _1, _2))
-    ,  addCoilID(bind(&VirtualPLCBuilder::do_addCoilID, self(), _1, _2))
-    ,  normalCoil(bind(&VirtualPLCBuilder::do_normalCoil, self(), _1, _2))
-    ,  negationCoil(bind(&VirtualPLCBuilder::do_negationCoil, self(), _1, _2))
-    ,  setCoil(bind(&VirtualPLCBuilder::do_setCoil, self(), _1, _2))
-    ,  resetCoil(bind(&VirtualPLCBuilder::do_resetCoil, self(), _1, _2))
-    ,  ladderDiagram(bind(&VirtualPLCBuilder::do_ladderDiagram, self(), _1, _2))
-    ,  terminate(bind(&VirtualPLCBuilder::do_terminate, self(), _1, _2))
+    ,  info(std::bind(&VirtualPLCBuilder::do_info, self(), _1, _2))
+    ,  declaration(std::bind(&VirtualPLCBuilder::do_declaration,
+                             self(), _1, _2))
+    ,  timerDeclaration(std::bind(&VirtualPLCBuilder::do_timerDeclaration,
+                                  self(), _1, _2))
+    ,  counterDeclaration(std::bind(&VirtualPLCBuilder::do_counterDeclaration,
+                                    self(), _1, _2))
+    ,  mapping(std::bind(&VirtualPLCBuilder::do_mapping, self(), _1, _2))
+    ,  factor(std::bind(&VirtualPLCBuilder::do_factor, self(), _1, _2))
+    ,  expression(std::bind(&VirtualPLCBuilder::do_expression, self(), _1, _2))
+    ,  exprAddToOutput(std::bind(&VirtualPLCBuilder::do_exprAddToOutput,
+                                 self(), _1, _2))
+    ,  exprAddToOperatorStack(std::bind(
+                                &VirtualPLCBuilder::do_exprAddToOperatorStack,
+                                self(), _1, _2))
+    ,  rparen(std::bind(&VirtualPLCBuilder::do_rparen, self(), _1, _2))
+    ,  compileRPN(std::bind(&VirtualPLCBuilder::do_compileRPN, self(), _1, _2))
+    ,  negationContact(std::bind(&VirtualPLCBuilder::do_negationContact,
+                                 self(), _1, _2))
+    ,  addCoilID(std::bind(&VirtualPLCBuilder::do_addCoilID, self(), _1, _2))
+    ,  normalCoil(std::bind(&VirtualPLCBuilder::do_normalCoil, self(), _1, _2))
+    ,  negationCoil(std::bind(&VirtualPLCBuilder::do_negationCoil,
+                              self(), _1, _2))
+    ,  setCoil(std::bind(&VirtualPLCBuilder::do_setCoil, self(), _1, _2))
+    ,  resetCoil(std::bind(&VirtualPLCBuilder::do_resetCoil, self(), _1, _2))
+    ,  ladderDiagram(std::bind(&VirtualPLCBuilder::do_ladderDiagram,
+                               self(), _1, _2))
+    ,  terminate(std::bind(&VirtualPLCBuilder::do_terminate, self(), _1, _2))
   {
     memory.addNextCODE(processorConfig.getIC("LATCH"));
     memory.addNextCODE(processorConfig.getIC("CCNTS"));
     // LOGICAL OPERATORS symbolData: qualifier, result type, operator priority
-    boost::spirit::classic::add(symbolsData, "NOT",
-                                symbolData("UNARY_OPERATOR", "BOOL", 1));
-    boost::spirit::classic::add(symbolsData, "AND",
-                                symbolData("BINARY_OPERATOR", "BOOL", 2));
-    boost::spirit::classic::add(symbolsData, "OR",
-                                symbolData("BINARY_OPERATOR", "BOOL", 3));
-    boost::spirit::classic::add(symbolsData, "XOR",
-                                symbolData("BINARY_OPERATOR", "BOOL", 4));
+    bsp::add(symbolsData, "NOT", symbolData("UNARY_OPERATOR", "BOOL", 1));
+    bsp::add(symbolsData, "AND", symbolData("BINARY_OPERATOR", "BOOL", 2));
+    bsp::add(symbolsData, "OR",  symbolData("BINARY_OPERATOR", "BOOL", 3));
+    bsp::add(symbolsData, "XOR", symbolData("BINARY_OPERATOR", "BOOL", 4));
     // LPAREN symbolData: qualifier, result type, operator priority
-    boost::spirit::classic::add(symbolsData, "(",
-                                symbolData("LPAREN", "", 0));
+    bsp::add(symbolsData, "(", symbolData("LPAREN", "", 0));
     // COMPARATORS symbolData: qualifier, result type, number of arguments
-    boost::spirit::classic::add(symbolsData, "GT",
-                                symbolData("COMPARATOR", "BOOL", 2));
-    boost::spirit::classic::add(symbolsData, "GE",
-                                symbolData("COMPARATOR", "BOOL", 2));
-    boost::spirit::classic::add(symbolsData, "EQ",
-                                symbolData("COMPARATOR", "BOOL", 2));
-    boost::spirit::classic::add(symbolsData, "LE",
-                                symbolData("COMPARATOR", "BOOL", 2));
-    boost::spirit::classic::add(symbolsData, "LT",
-                                symbolData("COMPARATOR", "BOOL", 2));
-    boost::spirit::classic::add(symbolsData, "NE",
-                                symbolData("COMPARATOR", "BOOL", 2));
+    bsp::add(symbolsData, "GT", symbolData("COMPARATOR", "BOOL", 2));
+    bsp::add(symbolsData, "GE", symbolData("COMPARATOR", "BOOL", 2));
+    bsp::add(symbolsData, "EQ", symbolData("COMPARATOR", "BOOL", 2));
+    bsp::add(symbolsData, "LE", symbolData("COMPARATOR", "BOOL", 2));
+    bsp::add(symbolsData, "LT", symbolData("COMPARATOR", "BOOL", 2));
+    bsp::add(symbolsData, "NE", symbolData("COMPARATOR", "BOOL", 2));
   }
 
   void showExprOutputRPN()
   {
-    std::queue<string> RPN(exprOutputRPN);
-    std::cout << "*** [Parser] expression RPN: ";
+    auto RPN(exprOutputRPN);
+    std::clog << "*** [Parser] expression RPN: ";
     while (!RPN.empty()) {
-      string s(RPN.front());
-      cout << s << " ";
+      std::string s(RPN.front());
+      std::clog << s << " ";
       RPN.pop();
     }
-    std::cout << std::endl;
+    std::clog << std::endl;
   }
 
   void do_info(const char* begin, const char* end)
@@ -247,7 +244,7 @@ struct VirtualPLCBuilder
       // Compile
       if (qualifier.empty())
       {
-        boost::spirit::classic::add(symbolsData, lhs.c_str(),
+        bsp::add(symbolsData, lhs.c_str(),
                                     symbolData(qualifier, type,
                                                memory.getNextVARaddress()));
         if (type == "INT") memory.addNextVAR(iValue);
@@ -256,7 +253,7 @@ struct VirtualPLCBuilder
       }
       else
       {
-        boost::spirit::classic::add(symbolsData, lhs.c_str(),
+        bsp::add(symbolsData, lhs.c_str(),
                                     symbolData(qualifier,
                                                type,
                                                memory.getNextCONSTaddress()));
@@ -273,7 +270,7 @@ struct VirtualPLCBuilder
 
     if (timerIndex > (MemoryConfig::nTIMERS - 1))
     {
-      string tI(1, '0'+ timerIndex);
+      std::string tI(1, '0'+ timerIndex);
       messages.push_back(Compiler::message_t('E', 0, begin, "Timer" + tI
                                              + "C is not available"));
     }
@@ -281,8 +278,8 @@ struct VirtualPLCBuilder
     {
       if (parList.size() == 1)
       {
-        cout << "[Parser] " << string(begin, end) << " " << timerIndex << " "
-             << parList[0] << " " << timerValue << endl;
+        std::clog << "[Parser] " << std::string(begin, end) << " " << timerIndex
+                  << " " << parList[0] << " " << timerValue << std::endl;
         auto p0 = find(symbolsData, parList[0].c_str());
         if (nullptr == p0) {
           messages.push_back(Compiler::message_t('E', 0, begin,
@@ -299,8 +296,8 @@ struct VirtualPLCBuilder
       }
       else
       {
-        cout << "[Parser] " << string(begin, end) << "  " << timerIndex << " "
-             << parList[0] << " " << parList[1] << endl;
+        std::clog << "[Parser] " << std::string(begin, end) << "  " << timerIndex
+                  << " " << parList[0] << " " << parList[1] << std::endl;
         auto p0 = find(symbolsData, parList[0].c_str());
         if (nullptr == p0)
         {
@@ -324,34 +321,35 @@ struct VirtualPLCBuilder
               + FunctionConfig::TC].actual = true;
           memory[timerOffset + timerIndex * MemoryConfig::TIMER_SIZE
               + FunctionConfig::TC].previous = true;
-          memory.addNextCODE(processorConfig.getIC(string("CPY")));
+          memory.addNextCODE(processorConfig.getIC("CPY"));
           memory.addNextCODE(p0->data);
-          memory.addNextCODE(timerOffset + timerIndex * MemoryConfig::TIMER_SIZE
+          memory.addNextCODE(timerOffset
+                             + timerIndex * MemoryConfig::TIMER_SIZE
                              + FunctionConfig::TEnable);
-          memory.dump(cerr);
+          memory.dump(std::cerr);
         }
       }
-      std::string timerName("TIMER" + to_string(timerIndex));
+      std::string timerName("TIMER" + std::to_string(timerIndex));
       {
         std::string timerNameSub(timerName + "N");
-        boost::spirit::classic::add(symbolsData, timerNameSub.c_str(),
-                                    symbolData(std::string(""), std::string("INT"),
+        bsp::add(symbolsData, timerNameSub.c_str(),
+                                    symbolData("", "INT",
                                                timerOffset
                                                + timerIndex * MemoryConfig::TIMER_SIZE
                                                + FunctionConfig::TN));
       }
       {
         std::string timerNameSub(timerName + "S");
-        boost::spirit::classic::add(symbolsData, timerNameSub.c_str(),
-                                    symbolData(std::string(""), std::string("BOOL"),
+        bsp::add(symbolsData, timerNameSub.c_str(),
+                                    symbolData("", "BOOL",
                                                timerOffset
                                                + timerIndex * MemoryConfig::TIMER_SIZE
                                                + FunctionConfig::TS));
       }
       {
         std::string timerNameSub(timerName + "C");
-        boost::spirit::classic::add(symbolsData, timerNameSub.c_str(),
-                                    symbolData(std::string(""), std::string("BOOL"),
+        bsp::add(symbolsData, timerNameSub.c_str(),
+                                    symbolData("", "BOOL",
                                                timerOffset
                                                + timerIndex * MemoryConfig::TIMER_SIZE
                                                + FunctionConfig::TC));
@@ -365,7 +363,7 @@ struct VirtualPLCBuilder
     int counterOffset = MemoryConfig::COUNTERS;
 
     if (counterIndex > (MemoryConfig::nCOUNTERS - 1)) {
-      string cI(1, '0'+ counterIndex);
+      std::string cI(1, '0'+ counterIndex);
       messages.push_back(Compiler::message_t('E', 0, begin,
                                              "Counter" + cI
                                              + "C is not available"));
@@ -373,8 +371,9 @@ struct VirtualPLCBuilder
     else
     {
       if (parList.size() == 1) {
-        cout << "[Parser] " << string(begin, end) << " " << counterIndex << " "
-             << parList[0] << " " << counterValue << endl;
+        std::clog << "[Parser] " << std::string(begin, end) << " "
+                  << counterIndex << " " << parList[0] << " " << counterValue
+                  << std::endl;
         auto p0 = find(symbolsData, parList[0].c_str());
         if (nullptr == p0) {
           messages.push_back(Compiler::message_t('E', 0, begin,
@@ -392,8 +391,9 @@ struct VirtualPLCBuilder
       }
       else
       {
-        cout << "[Parser] " << string(begin, end) << "  " << counterIndex << " "
-             << parList[0] << " " << parList[1] << endl;
+        std::clog << "[Parser] " << std::string(begin, end) << "  "
+                  << counterIndex << " " << parList[0] << " " << parList[1]
+                  << std::endl;
         auto p0 = find(symbolsData, parList[0].c_str());
         if (nullptr == p0) {
           messages.push_back(Compiler::message_t('E', 0, begin,
@@ -416,35 +416,35 @@ struct VirtualPLCBuilder
               + FunctionConfig::CC].actual = true;
           memory[counterOffset + counterIndex * MemoryConfig::COUNTER_SIZE
               + FunctionConfig::CC].previous = true;
-          memory.addNextCODE(processorConfig.getIC(string("CPY")));
+          memory.addNextCODE(processorConfig.getIC("CPY"));
           memory.addNextCODE(p0->data);
           memory.addNextCODE(counterOffset
                              + counterIndex * MemoryConfig::COUNTER_SIZE
                              + FunctionConfig::CEnable);
-          memory.dump(cerr);
+          memory.dump(std::cerr);
         }
       }
-      std::string counterName("COUNTER" + to_string(counterIndex));
+      std::string counterName("COUNTER" + std::to_string(counterIndex));
       {
         std::string counterNameSub(counterName + "N");
-        boost::spirit::classic::add(symbolsData, counterNameSub.c_str(),
-                                    symbolData(std::string(""), std::string("INT"),
+        bsp::add(symbolsData, counterNameSub.c_str(),
+                                    symbolData("", "INT",
                                                counterOffset
                                                + counterIndex * MemoryConfig::COUNTER_SIZE
                                                + FunctionConfig::CN));
       }
       {
         std::string counterNameSub(counterName + "S");
-        boost::spirit::classic::add(symbolsData, counterNameSub.c_str(),
-                                    symbolData(std::string(""), std::string("BOOL"),
+        bsp::add(symbolsData, counterNameSub.c_str(),
+                                    symbolData("", "BOOL",
                                                counterOffset
                                                + counterIndex * MemoryConfig::COUNTER_SIZE
                                                + FunctionConfig::CS));
       }
       {
         std::string counterNameSub(counterName + "C");
-        boost::spirit::classic::add(symbolsData, counterNameSub.c_str(),
-                                    symbolData(std::string(""), std::string("BOOL"),
+        bsp::add(symbolsData, counterNameSub.c_str(),
+                                    symbolData("", "BOOL",
                                                counterOffset
                                                + counterIndex * MemoryConfig::COUNTER_SIZE
                                                + FunctionConfig::CC));
@@ -455,7 +455,8 @@ struct VirtualPLCBuilder
 
   void do_mapping(const char* begin, const char* /* end */)
   {
-    std::cout << "*** [Parser] mapping " << XY << index << " = " << identifier << std::endl;
+    std::clog << "*** [Parser] mapping " << XY << index << " = " << identifier
+              << std::endl;
     auto p = find(symbolsData, identifier.c_str());
     if (nullptr == p) {
       messages.push_back(Compiler::message_t('E', 0, begin,
@@ -469,12 +470,12 @@ struct VirtualPLCBuilder
       switch (XY)
       {
         case 'X':
-          memory.addNextCODE(processorConfig.getIC(string("READX")));
+          memory.addNextCODE(processorConfig.getIC("READX"));
           if (indx > 0)
           {}
           break;
         case 'Y':
-          memory.addNextCODE(processorConfig.getIC(string("SETY")));
+          memory.addNextCODE(processorConfig.getIC("SETY"));
           if (indx > 0)
           {}
           break;
@@ -489,11 +490,11 @@ struct VirtualPLCBuilder
 
   void do_factor(const char* begin, const char* end)
   {
-    std::cout << "*** [Parser] factor: " << std::string(begin, end) <<
+    std::clog << "*** [Parser] factor: " << std::string(begin, end) <<
                  " " << parList.size() << " " << isFunction << std::endl;
     if (!isFunction) {
       exprOutputRPN.push(identifier);
-      std::cout << "*** [Parser] factor: is var/constant" << std::endl;
+      std::clog << "*** [Parser] factor: is var/constant" << std::endl;
     }
     else
     {
@@ -524,7 +525,7 @@ struct VirtualPLCBuilder
           exprOutputRPN.push(identifier);
         }
       }
-      std::cout << "*** [Parser] factor: is function" << std::endl;
+      std::clog << "*** [Parser] factor: is function" << std::endl;
     }
     showExprOutputRPN();
     identifier.clear();
@@ -534,21 +535,21 @@ struct VirtualPLCBuilder
 
   void do_expression(const char* begin, const char* end)
   {
-    std::cout << "*** [Parser] expression: " << std::string(begin, end)
+    std::clog << "*** [Parser] expression: " << std::string(begin, end)
               << std::endl;
   }
 
   void do_exprAddToOutput(const char* begin, const char* end)
   {
-    std::cout << "*** [Parser] to output '" << std::string(begin, end) << "'"
+    std::clog << "*** [Parser] to output '" << std::string(begin, end) << "'"
               << std::endl;
     exprOutputRPN.push(std::string(begin, end));
   }
 
   void do_exprAddToOperatorStack(const char* begin, const char* end)
   {
-    string Operator(begin, end);
-    std::cout << "*** [Parser] to opStack '" << Operator  << "'" << std::endl;
+    std::string Operator(begin, end);
+    std::clog << "*** [Parser] to opStack '" << Operator  << "'" << std::endl;
     if (Operator == "NOT" || Operator == "(") {
       exprOperatorStack.push(Operator);
     }
@@ -585,12 +586,12 @@ struct VirtualPLCBuilder
 
   void do_rparen(const char* /* begin */, const char* /* end */)
   {
-    std::cout << "*** [Parser] RPAREN" << std::endl;
+    std::clog << "*** [Parser] RPAREN" << std::endl;
     showExprOutputRPN();
     while (!exprOperatorStack.empty() && exprOperatorStack.top() != "(")
     {
       std::string OperatorOnStack(exprOperatorStack.top());
-      std::cout << "*** [Parser] ) operator on top stack '" << OperatorOnStack
+      std::clog << "*** [Parser] ) operator on top stack '" << OperatorOnStack
                 << "'" << std::endl;
       exprOutputRPN.push(OperatorOnStack);
       exprOperatorStack.pop();
@@ -603,7 +604,7 @@ struct VirtualPLCBuilder
 
   void do_compileRPN(const char* begin, const char* /* end */)
   {
-    std::cout << "*** [Parser] compileRPN" << std::endl;
+    std::clog << "*** [Parser] compileRPN" << std::endl;
     // Put entire exprOperatorStack to exprOutputRPN
     while (!exprOperatorStack.empty())
     {
@@ -620,17 +621,16 @@ struct VirtualPLCBuilder
       {
         if (p0->qualifier == "" || p0->qualifier == "CONST")
         {
-          std::cout << "*** [Parser] compile a var/const "
+          std::clog << "*** [Parser] compile a var/const "
                     << exprOutputRPN.front() << std::endl;
           memory.addNextCODE(processorConfig.getIC("SPUSH"));
           memory.addNextCODE(p0->data);
         }
         else
         {
-          std::cout << "*** [Parser] compile a function "
+          std::clog << "*** [Parser] compile a function "
                     << exprOutputRPN.front() << std::endl;
-          memory.addNextCODE(processorConfig.getIC(string("S")
-                                                   + exprOutputRPN.front()));
+          memory.addNextCODE(processorConfig.getIC("S" + exprOutputRPN.front()));
         }
       }
       else
@@ -663,7 +663,7 @@ struct VirtualPLCBuilder
   void do_addCoilID(const char* begin, const char* end)
   {
     std::string id(begin, end);
-    std::cout << "*** [Parser] to coils queue '" << id << "'" << std::endl;
+    std::clog << "*** [Parser] to coils queue '" << id << "'" << std::endl;
     auto p = find(symbolsData, id.c_str());
     if (nullptr == p) {
       messages.push_back(Compiler::message_t('E', 0, begin,
@@ -677,7 +677,7 @@ struct VirtualPLCBuilder
   {
     if (!coils.empty())
     {
-      std::cout << "*** [Parser] Normal coil '" << coils.front() << "'"
+      std::clog << "*** [Parser] Normal coil '" << coils.front() << "'"
                 << std::endl;
       auto p = find(symbolsData, coils.front().c_str());
       if (p)
@@ -705,7 +705,7 @@ struct VirtualPLCBuilder
   {
     if (!coils.empty())
     {
-      std::cout << "*** [Parser] Negation coil '" << coils.front() << "'"
+      std::clog << "*** [Parser] Negation coil '" << coils.front() << "'"
                 << std::endl;
       auto p = find(symbolsData, coils.front().c_str());
       if (p) {
@@ -732,7 +732,7 @@ struct VirtualPLCBuilder
   {
     if (!coils.empty())
     {
-      std::cout << "*** [Parser] Set coil '" << coils.front() << "'"
+      std::clog << "*** [Parser] Set coil '" << coils.front() << "'"
                 << std::endl;
       auto p = find(symbolsData, coils.front().c_str());
       if (p) {
@@ -759,7 +759,7 @@ struct VirtualPLCBuilder
   {
     if (!coils.empty())
     {
-      std::cout << "*** [Parser] Reset coil '" << coils.front() << "'"
+      std::clog << "*** [Parser] Reset coil '" << coils.front() << "'"
                 << std::endl;
       auto p = find(symbolsData, coils.front().c_str());
       if (p) {
@@ -801,13 +801,13 @@ struct VirtualPLCBuilder
     memory.addNextCODE(processorConfig.getIC("SHY"));
     memory.addNextCODE(processorConfig.getIC("EOPL"));
     // Store initial values for clearing PLC
-    copy(&memory[MemoryConfig::VARS],
+    std::copy(&memory[MemoryConfig::VARS],
         &memory[MemoryConfig::VARS + MemoryConfig::VARS_SIZE],
         &memory[MemoryConfig::VARS_INIT]);
-    copy(&memory[MemoryConfig::COUNTERS],
+    std::copy(&memory[MemoryConfig::COUNTERS],
         &memory[MemoryConfig::COUNTERS + MemoryConfig::nCOUNTERS * MemoryConfig::COUNTER_SIZE],
         &memory[MemoryConfig::COUNTERS_INIT]);
-    copy(&memory[MemoryConfig::TIMERS],
+    std::copy(&memory[MemoryConfig::TIMERS],
         &memory[MemoryConfig::TIMERS + MemoryConfig::nTIMERS * MemoryConfig::TIMER_SIZE],
         &memory[MemoryConfig::TIMERS_INIT]);
     // Clear parser status vars
@@ -822,16 +822,16 @@ struct VirtualPLCBuilder
 
 };
 
-struct skipParser: public grammar<skipParser>
+struct skipParser: public bsp::grammar<skipParser>
 {
   template <typename ScannerT>
   struct definition
   {
-    rule<ScannerT> skip;
+    bsp::rule<ScannerT> skip;
 
     definition(const skipParser& /* self */)
     {
-      skip = comment_p("//") | space_p | ch_p('\n') | blank_p;
+      skip = bsp::comment_p("//") | bsp::space_p | bsp::ch_p('\n') | bsp::blank_p;
 
 #ifdef BOOST_SPIRIT_DEBUG
       BOOST_SPIRIT_DEBUG_RULE(skip);
@@ -839,11 +839,11 @@ struct skipParser: public grammar<skipParser>
 
     }
 
-    const rule<ScannerT>& start() { return skip; }
+    const bsp::rule<ScannerT>& start() { return skip; }
   };
 };
 
-struct PLCscriptParser: public grammar<PLCscriptParser>
+struct PLCscriptParser: public bsp::grammar<PLCscriptParser>
 {
   VirtualPLCBuilder& vpb_;
 
@@ -867,55 +867,55 @@ struct PLCscriptParser: public grammar<PLCscriptParser>
           "AND", "OR", "XOR", "NOT",
           "GT", "GE", "EQ", "LE", "LT", "NE";
 
-      strlit<> ASSIGN("=");
-      strlit<> LPAREN("(");
-      strlit<> RPAREN(")");
-      strlit<> SEMI(";");
-      strlit<> TRUE("true");
-      strlit<> FALSE("false");
-      strlit<> CONST("CONST");
-      strlit<> NOT("NOT");
-      strlit<> OR("OR");
-      strlit<> AND("AND");
-      strlit<> XOR("XOR");
-      strlit<> TIMER_M("TIMER_M");
-      strlit<> COUNTER_M("COUNTER_M");
-      strlit<> GT("GT");
-      strlit<> GE("GE");
-      strlit<> EQ("EQ");
-      strlit<> LE("LE");
-      strlit<> LT("LT");
-      strlit<> NE("NE");
+      bsp::strlit<> ASSIGN("=");
+      bsp::strlit<> LPAREN("(");
+      bsp::strlit<> RPAREN(")");
+      bsp::strlit<> SEMI(";");
+      bsp::strlit<> TRUE("true");
+      bsp::strlit<> FALSE("false");
+      bsp::strlit<> CONST("CONST");
+      bsp::strlit<> NOT("NOT");
+      bsp::strlit<> OR("OR");
+      bsp::strlit<> AND("AND");
+      bsp::strlit<> XOR("XOR");
+      bsp::strlit<> TIMER_M("TIMER_M");
+      bsp::strlit<> COUNTER_M("COUNTER_M");
+      bsp::strlit<> GT("GT");
+      bsp::strlit<> GE("GE");
+      bsp::strlit<> EQ("EQ");
+      bsp::strlit<> LE("LE");
+      bsp::strlit<> LT("LT");
+      bsp::strlit<> NE("NE");
 
       script =
           *(declaration)
           >> *(functionBlock)
           >> *(mappingIO)
           >> *(ladderDiagram)
-          >> end_p[vpb.terminate]
+          >> bsp::end_p[vpb.terminate]
              ;
 
       declaration =
-          ((qualifier[assign_a(vpb.qualifier)]
-           >> type[assign_a(vpb.type)] >> identifier[assign_a(vpb.lhs)]
+          ((qualifier[bsp::assign_a(vpb.qualifier)]
+           >> type[bsp::assign_a(vpb.type)] >> identifier[bsp::assign_a(vpb.lhs)]
           >> ASSIGN
-          >> (value[assign_a(vpb.rhs, "")] | identifier[assign_a(vpb.value, "")][assign_a(vpb.rhs)])
+          >> (value[bsp::assign_a(vpb.rhs, "")] | identifier[bsp::assign_a(vpb.value, "")][bsp::assign_a(vpb.rhs)])
           >> SEMI)[vpb.declaration]) |
-          ((type[assign_a(vpb.type)][assign_a(vpb.qualifier, "")]
-          >> identifier[assign_a(vpb.lhs)]
+          ((type[bsp::assign_a(vpb.type)][bsp::assign_a(vpb.qualifier, "")]
+          >> identifier[bsp::assign_a(vpb.lhs)]
           >> ASSIGN
-          >> (value[assign_a(vpb.rhs, "")] | identifier[assign_a(vpb.value, "")][assign_a(vpb.rhs)])
+          >> (value[bsp::assign_a(vpb.rhs, "")] | identifier[bsp::assign_a(vpb.value, "")][bsp::assign_a(vpb.rhs)])
           >> SEMI)[vpb.declaration])
           ;
 
       mappingIO =
-          (lexeme_d[(ch_p('X')[assign_a(vpb.XY)] | ch_p('Y')[assign_a(vpb.XY)])
-          >> digit_p[assign_a(vpb.index)]]
-          >> ASSIGN >> identifier[assign_a(vpb.identifier)] >> SEMI)[vpb.mapping]
+          (bsp::lexeme_d[(bsp::ch_p('X')[bsp::assign_a(vpb.XY)] | bsp::ch_p('Y')[bsp::assign_a(vpb.XY)])
+          >> bsp::digit_p[bsp::assign_a(vpb.index)]]
+          >> ASSIGN >> identifier[bsp::assign_a(vpb.identifier)] >> SEMI)[vpb.mapping]
           ;
 
       empty =
-          epsilon_p
+          bsp::epsilon_p
           ;
 
       term =
@@ -924,13 +924,13 @@ struct PLCscriptParser: public grammar<PLCscriptParser>
           (LPAREN[vpb.exprAddToOperatorStack] >> expression >> RPAREN[vpb.rparen])
           ;
 
-      // assign_a(vpb.isFunction, true) does not work (??) replaced by assign_a(vpb.isFunction, 1)
+      // bsp::assign_a(vpb.isFunction, true) does not work (??) replaced by bsp::assign_a(vpb.isFunction, 1)
       factor =
-          identifier[assign_a(vpb.identifier)]
-          >> if_p(LPAREN)[!(identifier[push_back_a(vpb.parList)]
+          identifier[bsp::assign_a(vpb.identifier)]
+          >> if_p(LPAREN)[!(identifier[bsp::push_back_a(vpb.parList)]
           >>
-             *("," >> identifier[push_back_a(vpb.parList)]) >>
-          RPAREN)[assign_a(vpb.isFunction, 1)]]
+             *("," >> identifier[bsp::push_back_a(vpb.parList)]) >>
+          RPAREN)[bsp::assign_a(vpb.isFunction, 1)]]
           ;
 
       expression =
@@ -939,7 +939,7 @@ struct PLCscriptParser: public grammar<PLCscriptParser>
                                               >> (!NOT[vpb.exprAddToOperatorStack]) >> term))[vpb.expression]
           ;
 
-      // assign_a(vpb.isFunction, true) replaced by assign_a(vpb.isFunction, 1)
+      // bsp::assign_a(vpb.isFunction, true) replaced by bsp::assign_a(vpb.isFunction, 1)
       //         term =
       //             (identifier[assign_a(vpb.identifier)]
       //             >> if_p(LPAREN)[!(identifier[push_back_a(vpb.parList)] >>
@@ -966,64 +966,64 @@ struct PLCscriptParser: public grammar<PLCscriptParser>
           ;
 
       identifier =
-          (lexeme_d[((alpha_p >> *(alnum_p | ch_p('_')))
-                     - (keywords >> (anychar_p - (alnum_p | '_'))))])
+          (bsp::lexeme_d[((bsp::alpha_p >> *(bsp::alnum_p | bsp::ch_p('_')))
+                     - (keywords >> (bsp::anychar_p - (bsp::alnum_p | '_'))))])
           ;
 
       coil =
           // normal
-          (ch_p('(') >> ch_p(')'))[vpb.normalCoil] |
+          (bsp::ch_p('(') >> bsp::ch_p(')'))[vpb.normalCoil] |
           // negation
-          (ch_p('(') >> ch_p('/') >> ch_p(')'))[vpb.negationCoil] |
+          (bsp::ch_p('(') >> bsp::ch_p('/') >> bsp::ch_p(')'))[vpb.negationCoil] |
           // set
-          (ch_p('(') >> ch_p('S') >> ch_p(')'))[vpb.setCoil] |
+          (bsp::ch_p('(') >> bsp::ch_p('S') >> bsp::ch_p(')'))[vpb.setCoil] |
           // reset
-          (ch_p('(') >> ch_p('R') >> ch_p(')'))[vpb.resetCoil]
+          (bsp::ch_p('(') >> bsp::ch_p('R') >> bsp::ch_p(')'))[vpb.resetCoil]
           ;
 
       contact =
           // normal
-          (ch_p('[') >> ch_p(']')) |
+          (bsp::ch_p('[') >> bsp::ch_p(']')) |
           // negation
-          (ch_p('[') >> ch_p('/') >> ch_p(']'))[vpb.negationContact]
+          (bsp::ch_p('[') >> bsp::ch_p('/') >> bsp::ch_p(']'))[vpb.negationContact]
           ;
 
       ladderDiagram =
           (expression >> identifier[vpb.compileRPN][vpb.addCoilID]
           >> *(identifier)[vpb.addCoilID]
-          >> lexeme_d[+ch_p('-')
-          >> contact >> +ch_p('-')
-          >> +(coil >> *ch_p('-'))])[vpb.ladderDiagram]
+          >> bsp::lexeme_d[+bsp::ch_p('-')
+          >> contact >> +bsp::ch_p('-')
+          >> +(coil >> *bsp::ch_p('-'))])[vpb.ladderDiagram]
           ;
 
       type =
-          lexeme_d[alpha_p >> *(alnum_p | ch_p('_'))][assign_a(vpb.type)]
+          bsp::lexeme_d[bsp::alpha_p >> *(bsp::alnum_p | bsp::ch_p('_'))][bsp::assign_a(vpb.type)]
           ;
 
       qualifier =
-          lexeme_d[alpha_p >> *(alnum_p | ch_p('_'))][assign_a(vpb.qualifier)]
+          bsp::lexeme_d[bsp::alpha_p >> *(bsp::alnum_p | bsp::ch_p('_'))][bsp::assign_a(vpb.qualifier)]
           ;
 
       value =
-          (TRUE | FALSE | int_p)[assign_a(vpb.value)]
+          (TRUE | FALSE | bsp::int_p)[bsp::assign_a(vpb.value)]
           ;
 
       functionBlock =
-          ((TIMER_M >> lexeme_d[strlit<>("TIMER") >> int_p[assign_a(vpb.timerIndex)]
-          >> strlit<>("C")]
-          >> LPAREN >> identifier[push_back_a(vpb.parList)] >> ch_p(',')
-          >> (identifier[push_back_a(vpb.parList)] | int_p[assign_a(vpb.timerValue)])
+          ((TIMER_M >> bsp::lexeme_d[bsp::strlit<>("TIMER") >> bsp::int_p[bsp::assign_a(vpb.timerIndex)]
+          >> bsp::strlit<>("C")]
+          >> LPAREN >> identifier[bsp::push_back_a(vpb.parList)] >> bsp::ch_p(',')
+          >> (identifier[bsp::push_back_a(vpb.parList)] | bsp::int_p[bsp::assign_a(vpb.timerValue)])
           >> RPAREN >> SEMI)[vpb.timerDeclaration]) |
-          ((COUNTER_M >> lexeme_d[strlit<>("COUNTER") >> int_p[assign_a(vpb.counterIndex)]
-          >> strlit<>("C")]
-          >> LPAREN >> identifier[push_back_a(vpb.parList)] >> ch_p(',')
-          >> (identifier[push_back_a(vpb.parList)] | int_p[assign_a(vpb.counterValue)])
+          ((COUNTER_M >> bsp::lexeme_d[bsp::strlit<>("COUNTER") >> bsp::int_p[bsp::assign_a(vpb.counterIndex)]
+          >> bsp::strlit<>("C")]
+          >> LPAREN >> identifier[bsp::push_back_a(vpb.parList)] >> bsp::ch_p(',')
+          >> (identifier[bsp::push_back_a(vpb.parList)] | bsp::int_p[bsp::assign_a(vpb.counterValue)])
           >> RPAREN >> SEMI)[vpb.counterDeclaration])
           ;
     }
 
-    symbols<> keywords;
-    typedef rule<ScannerT> rule_t;
+    bsp::symbols<> keywords;
+    using rule_t = bsp::rule<ScannerT>;
 
     rule_t
     script,
@@ -1070,7 +1070,7 @@ struct PLCscriptParser: public grammar<PLCscriptParser>
     }
 #endif
 
-    rule<ScannerT> const& start() const
+    bsp::rule<ScannerT> const& start() const
     {
       return script;
     }

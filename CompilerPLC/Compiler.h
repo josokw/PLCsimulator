@@ -19,7 +19,7 @@ public:
   /// int: corresponding line number
   /// const char*: position in input stream
   /// string: message
-  typedef std::tuple<char, int, const char*, std::string> message_t;
+  using message_t = std::tuple<char, int, const char*, std::string>;
 
   Compiler();
   virtual ~Compiler() = default;
