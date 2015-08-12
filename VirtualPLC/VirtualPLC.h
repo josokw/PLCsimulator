@@ -9,6 +9,7 @@
 #include "PeriodicTask.h"
 
 #include <atomic>
+#include <array>
 #include <fstream>
 #include <mutex>
 #include <string>
@@ -59,15 +60,15 @@ private:
    std::ifstream _plcBinFile;
    std::ofstream _plcBinFileOut;
    Memory _memory;
-   std::vector<Timer> _timers;
-   std::vector<Counter> _counters;
+   std::array<Timer, MemoryConfig::nTIMERS> _timers;
+   std::array<Counter, MemoryConfig::nCOUNTERS> _counters;
    Processor _processor;
    /// Stores memory status
    bool _memoryIsLoaded;
    /// Stores running status
    std::atomic<bool> _isRunning_;
    /// Stores the number of loops executed.
-   unsigned long _step;
+   unsigned long long _step;
    PeriodicTask _tickTask;
    PeriodicTask _runTask;
    /// Updates all timers.

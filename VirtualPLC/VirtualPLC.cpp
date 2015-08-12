@@ -10,18 +10,18 @@
 using namespace std;
 
 VirtualPLC::VirtualPLC()
-  :  _mutexIO()
-  ,  _plcBinFile()
-  ,  _plcBinFileOut()
-  ,  _memory()
-  ,  _timers(MemoryConfig::nTIMERS)
-  ,  _counters(MemoryConfig::nCOUNTERS)
+  :  _mutexIO{}
+  ,  _plcBinFile{}
+  ,  _plcBinFileOut{}
+  ,  _memory{}
+  ,  _timers{}
+  ,  _counters{}
   ,  _processor(&_memory, &_counters)
-  ,  _memoryIsLoaded(false)
-  ,  _isRunning_(false)
-  ,  _step(0L)
-  ,  _tickTask(this, &VirtualPLC::tick, TICK)
-  ,  _runTask(this, &VirtualPLC::run, RUN)
+  ,  _memoryIsLoaded{false}
+  ,  _isRunning_{false}
+  ,  _step{0LL}
+  ,  _tickTask{this, &VirtualPLC::tick, TICK}
+  ,  _runTask{this, &VirtualPLC::run, RUN}
 {
   // Map all timers to memory
   size_t i = 0;

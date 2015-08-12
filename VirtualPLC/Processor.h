@@ -8,7 +8,6 @@
 #include <map>
 #include <memory>
 #include <string>
-#include <vector>
 
 class Counter;
 class Processor;
@@ -21,7 +20,8 @@ typedef void (Processor::*instruction)();
 class Processor
 {
 public:
-  Processor(Memory* pMemory, std::vector<Counter>* pCounters);
+  Processor(Memory* pMemory,
+            std::array<Counter, MemoryConfig::nCOUNTERS>* pCounters);
   Processor(Processor const& other) = delete;
   Processor& operator=(Processor const& other) = delete;
   ~Processor() = default;
@@ -37,8 +37,7 @@ public:
   int getICode(const std::string& SymbolicName) const;
 private:
   Memory* _pMemory;
-  //std::vector<Timer>* _pTimers;
-  std::vector<Counter>* _pCounters;
+  std::array<Counter, MemoryConfig::nCOUNTERS>* _pCounters;
   std::unique_ptr<ProcessorConfig> _pConfig;
   /// Program Counter
   int _PC;
@@ -49,7 +48,7 @@ private:
   /// Status Register, contains run time error status
   int _SR;
   /// Instruction Look Up Table (LUT)
-  std::vector<instruction> _instructionLUT;
+  std::array<instruction, ProcessorConfig::MAX_INSTRUCTIONS> _instructionLUT;
   /// Check for end of program loop.
   bool _endOfProgramLoop;
   /// Clear memory: all valued 0x0000

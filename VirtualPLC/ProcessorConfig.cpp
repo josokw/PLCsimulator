@@ -1,8 +1,8 @@
 #include "ProcessorConfig.h"
 
 ProcessorConfig::ProcessorConfig()
-  :   _nextIC(0)
-  ,   _symbolicInstructionToIC()
+  :   _nextIC{0}
+  ,   _symbolicInstructionToIC{}
 {
   setMapping("EOPL");
   setMapping("LATCH");

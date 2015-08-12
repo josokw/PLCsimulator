@@ -11,16 +11,17 @@
 
 using namespace std;
 
-Processor::Processor(Memory* pMemory, std::vector<Counter>* pCounters)
-  :  _pMemory(pMemory)
-  ,  _pCounters(pCounters)
-  ,  _pConfig(new ProcessorConfig)
-  ,  _PC(MemoryConfig::ENTRYPOINT)
-  ,  _IR(0)
-  ,  _SP(MemoryConfig::STACK)
-  ,  _SR(0)
-  ,  _instructionLUT(ProcessorConfig::MAX_INSTRUCTIONS)
-  ,  _endOfProgramLoop(false)
+Processor::Processor(Memory* pMemory,
+                     std::array<Counter, MemoryConfig::nCOUNTERS>* pCounters)
+  :  _pMemory{pMemory}
+  ,  _pCounters{pCounters}
+  ,  _pConfig{new ProcessorConfig}
+  ,  _PC{MemoryConfig::ENTRYPOINT}
+  ,  _IR{0}
+  ,  _SP{MemoryConfig::STACK}
+  ,  _SR{0}
+  ,  _instructionLUT{}
+  ,  _endOfProgramLoop{false}
 {
   clearMemory();
   fillInstructionLUT();
