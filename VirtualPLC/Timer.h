@@ -11,23 +11,22 @@ class Timer
 {
 public:
    Timer();
-
+   virtual ~Timer() = default;
    /// Set timer id (0..N)
-   void setID(int ID) { id = ID; }
+   void setID(int ID) { _id = ID; }
    /// Maps timer to memory and initialises all internal registers.
-   void mapToMemory(Memory& mem, int offset);
+   void mapToMemory(Memory& mem, int _offset);
    /// Timer tick.
    void tick();
-
 private:
-   Memory* memory;
-   int id;
-   int offset;
-   int TEnable;
-   int TValue;
-   int TN;
-   int TS;
-   int TC;
+   Memory* _pMemory;
+   int _id;
+   int _offset;
+   int _TEnable;
+   int _TValue;
+   int _TN;
+   int _TS;
+   int _TC;
 };
 
 #endif // TIMER_H

@@ -36,7 +36,7 @@ public:
    /// Put PLC in running mode
    void run();
    /// Test run status
-   bool isRunning() const { return _isRunning_; }
+   bool isRunning() const { return _isRunning; }
    /// PLC continues running
    void start();
    /// Halt PLC, stop running
@@ -67,7 +67,7 @@ private:
    /// Stores memory status
    bool _memoryIsLoaded;
    /// Stores running status
-   std::atomic<bool> _isRunning_;
+   std::atomic<bool> _isRunning;
    /// Stores the number of loops executed.
    unsigned long long _step;
    PeriodicTask _tickTask;

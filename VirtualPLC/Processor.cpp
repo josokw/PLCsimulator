@@ -20,7 +20,7 @@ Processor::Processor(Memory* pMemory,
   ,  _IR{0}
   ,  _SP{MemoryConfig::STACK}
   ,  _SR{0}
-  ,  _instructionLUT{}
+  ,  _instructionLUT()
   ,  _endOfProgramLoop{false}
 {
   clearMemory();
@@ -512,7 +512,7 @@ void Processor::NE()
 void Processor::CCNTS()
 {
   clog << "CCNTS" << endl;
-  if (_pCounters == 0)
+  if (nullptr == _pCounters)
   {
     clog << "[Processor] no counters available" << std::endl;
   }

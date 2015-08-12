@@ -14,11 +14,11 @@ VirtualPLC::VirtualPLC()
   ,  _plcBinFile{}
   ,  _plcBinFileOut{}
   ,  _memory{}
-  ,  _timers{}
-  ,  _counters{}
+  ,  _timers()
+  ,  _counters()
   ,  _processor(&_memory, &_counters)
   ,  _memoryIsLoaded{false}
-  ,  _isRunning_{false}
+  ,  _isRunning{false}
   ,  _step{0LL}
   ,  _tickTask{this, &VirtualPLC::tick, TICK}
   ,  _runTask{this, &VirtualPLC::run, RUN}
@@ -137,7 +137,7 @@ void VirtualPLC::start()
   {
     _tickTask.start();
     _runTask.start();
-    _isRunning_ = true;
+    _isRunning = true;
   }
   else
   {
@@ -151,7 +151,7 @@ void VirtualPLC::stop()
   {
     _tickTask.stop();
     _runTask.stop();
-    _isRunning_ = false;
+    _isRunning = false;
   }
 }
 
