@@ -14,7 +14,6 @@ CONFIG(release, debug|release) {
 }
 
 SOURCES += \
-    LibInfo.cpp \
     VirtualPLC.cpp \
     Timer.cpp \
     ProcessorConfig.cpp \

@@ -29,9 +29,9 @@ void Memory::clear()
   _varAddress = MemoryConfig::VARS;
   _tmpvarAddress = MemoryConfig::TMPVARS;
   _codeAddress = MemoryConfig::ENTRYPOINT;
-  addNextCONST(stoi(vplc::libMajorVersion()));
-  addNextCONST(stoi(vplc::libMinorVersion()));
-  addNextCONST(stoi(vplc::libRevisionVersion()));
+  addNextCONST(stoi(vplc::libMajorVersion));
+  addNextCONST(stoi(vplc::libMinorVersion));
+  addNextCONST(stoi(vplc::libRevisionVersion));
 }
 
 void Memory::addNextCONST(int value)

@@ -699,7 +699,7 @@ void MainWindow::about()
                         "<p>- Qt version ")
                      .append(QT_VERSION_STR)
                      .append("</p><p>- VirtualPLC C++ lib version ")
-                     .append(vplc::libVersion().c_str())
+                     .append(vplc::libVersion.c_str())
                      .append("</p><p>- Boost C++ libraries version ")
                      .append(bv).append("\n</p>"));
 }

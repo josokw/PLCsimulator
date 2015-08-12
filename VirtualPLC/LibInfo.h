@@ -6,12 +6,13 @@
 namespace vplc
 {
 
-std::string libName();
-std::string libMajorVersion();
-std::string libMinorVersion();
-std::string libRevisionVersion();
-std::string libVersion();
-
+const std::string libName{"VirtualPLC"};
+const std::string libMajorVersion{"1"};
+const std::string libMinorVersion{"2"};
+const std::string libRevisionVersion{"1"};
+const std::string libVersion{libMajorVersion
+                             + "."  + libMinorVersion
+                             + "." + libRevisionVersion};
 }
 
 #endif // LIBINFO_H
