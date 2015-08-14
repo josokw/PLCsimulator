@@ -42,21 +42,21 @@ public:
    /// Halt PLC, stop running
    void stop();
    /// Get output by index (0..nY)
-   bool getY(int index) const { return _memory[MemoryConfig::OUTPUT_Y].integer
-         & (1 << index); }
+   bool getY(int32_t index) const {
+     return _memory[MemoryConfig::OUTPUT_Y].integer & (1 << index); }
    /// Set input by index (0..nX) en status (true/false)
-   void setX(int index, bool status);
-   int getYs() const { return _memory[MemoryConfig::OUTPUT_Y].integer; }
-   void setXs(int status) { _memory[MemoryConfig::INPUT_X].integer = status; }
+   void setX(int32_t index, bool status);
+   int32_t getYs() const { return _memory[MemoryConfig::OUTPUT_Y].integer; }
+   void setXs(int32_t status) { _memory[MemoryConfig::INPUT_X].integer = status; }
    int getMaxX() const { return nX; }
    int getMaxY() const { return nY; }
 private:
    /// Number of inputs
-   static const int nX = 8;
+   static const int32_t nX = 8;
    /// Number of outputs
-   static const int nY = 6;
-   static const int TICK = 100; // in msec
-   static const int RUN = 50; // in msec
+   static const int32_t nY = 6;
+   static const int32_t TICK = 100; // in msec
+   static const int32_t RUN = 50; // in msec
    std::mutex _mutexIO;
    std::ifstream _plcBinFile;
    std::ofstream _plcBinFileOut;

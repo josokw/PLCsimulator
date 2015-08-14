@@ -8,7 +8,7 @@ Counter::Counter()
 {
 }
 
-void Counter::mapToMemory(Memory& mem, int offst)
+void Counter::mapToMemory(Memory& mem, int32_t offst)
 {
    _pMemory = &mem;
    _offset = offst;

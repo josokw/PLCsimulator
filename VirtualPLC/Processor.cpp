@@ -153,7 +153,7 @@ Data<int> Processor::pop()
 
 void Processor::setSRbit(ProcessorConfig::SR_STATUS_BIT stat)
 {
-  _SR |= static_cast<int>(stat);
+  _SR |= static_cast<int32_t>(stat);
 }
 
 void Processor::NOTDEF()

@@ -1,6 +1,7 @@
 #ifndef PERIODICTASK_H
 #define PERIODICTASK_H
 
+#include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <functional>
@@ -67,8 +68,8 @@ public:
 
 private:
   std::chrono::milliseconds _tms;
-  volatile bool _isAlive;
-  volatile bool _isRunning;
+  volatile std::atomic_bool _isAlive;
+  volatile std::atomic_bool _isRunning;
   std::mutex _mutex;
   std::condition_variable _condition;
   std::thread _thread;

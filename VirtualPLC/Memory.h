@@ -7,7 +7,7 @@
 #include <array>
 #include <iosfwd>
 
-using data_t = Data<int>;
+using data_t = Data<int32_t>;
 
 class MemoryConfig;
 
@@ -37,7 +37,7 @@ public:
   /// Add next VAR BOOL
   void addNextVAR(bool value);
   /// Add next TMPVAR INT
-  void addNextTMPVAR(int value);
+  void addNextTMPVAR(int32_t value);
   /// Add next TMPVAR BOOL
   void addNextTMPVAR(bool value);
   /// Add next CODE
@@ -55,10 +55,10 @@ public:
 private:
   bool _outOfMemory;
   std::array<data_t, MemoryConfig::MEM_SIZE> _memory;
-  int _constAddress;
-  int _varAddress;
-  int _tmpvarAddress;
-  int _codeAddress;
+  int32_t _constAddress;
+  int32_t _varAddress;
+  int32_t _tmpvarAddress;
+  int32_t _codeAddress;
 };
 
 #endif // MEMORY_H

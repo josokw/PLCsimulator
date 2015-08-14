@@ -16,6 +16,7 @@ class Processor;
 typedef void (Processor::*instruction)();
 
 /// Processor is able to use variables and constants, timers and counters.
+/// Internal registers: 32 bits.
 /// A processor executes instructions in memory.
 class Processor
 {
@@ -30,21 +31,21 @@ public:
   /// Loads program in memory
   void loadMemory(const Memory& memory);
   /// Returns actual value Program Counter
-  int getPC() const { return _PC; }
+  int32_t getPC() const { return _PC; }
   /// Returns actual value Status Register
-  int getSR() const { return _SR; }
+  int32_t getSR() const { return _SR; }
 private:
   Memory* _pMemory;
   std::array<Counter, MemoryConfig::nCOUNTERS>* _pCounters;
   std::unique_ptr<ProcessorConfig> _pConfig;
   /// Program Counter
-  int _PC;
+  int32_t _PC;
   /// Instruction Register
-  int _IR;
+  int32_t _IR;
   /// Stack Pointer
-  int _SP;
+  int32_t _SP;
   /// Status Register, contains run time error status
-  int _SR;
+  int32_t _SR;
   /// Instruction Look Up Table (LUT)
   std::array<instruction, ProcessorConfig::MAX_INSTRUCTIONS> _instructionLUT;
   /// Check for end of program loop.

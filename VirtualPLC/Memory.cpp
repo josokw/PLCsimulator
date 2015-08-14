@@ -34,7 +34,7 @@ void Memory::clear()
   addNextCONST(stoi(vplc::libRevisionVersion));
 }
 
-void Memory::addNextCONST(int value)
+void Memory::addNextCONST(int32_t value)
 {
   _memory[_constAddress++].integer = value;
 }
@@ -45,7 +45,7 @@ void Memory::addNextCONST(bool value)
   _memory[_constAddress++].previous = value;
 }
 
-void Memory::addNextVAR(int value)
+void Memory::addNextVAR(int32_t value)
 {
   _memory[_varAddress++].integer = value;
 }
@@ -62,22 +62,22 @@ void Memory::addNextTMPVAR(bool value)
   _memory[_varAddress++].previous = value;
 }
 
-void Memory::addNextTMPVAR(int value)
+void Memory::addNextTMPVAR(int32_t value)
 {
   _memory[_tmpvarAddress++].integer = value;
 }
 
-void Memory::addNextCODE(int value)
+void Memory::addNextCODE(int32_t value)
 {
   _memory[_codeAddress++].integer = value;
 }
 
-data_t Memory::operator[](int index) const
+data_t Memory::operator[](int32_t index) const
 {
   return _memory.at(index);
 }
 
-data_t& Memory::operator[](int index)
+data_t& Memory::operator[](int32_t index)
 {
   return _memory.at(index);
 }
@@ -98,7 +98,7 @@ void Memory::dump(ostream& os) const
   }
   os << endl << endl;
   index = 0;
-  for (int i = MemoryConfig::COUNTERS; i < MemoryConfig::TIMERS; ++i)
+  for (auto i = MemoryConfig::COUNTERS; i < MemoryConfig::TIMERS; ++i)
   {
     if (MemoryConfig::COUNTER_SIZE == index)
     {
@@ -110,7 +110,7 @@ void Memory::dump(ostream& os) const
   }
   os << endl << endl;
   index = 0;
-  for (int i = MemoryConfig::TIMERS; i < MemoryConfig::OUTPUT_Y_LATCH; ++i)
+  for (auto i = MemoryConfig::TIMERS; i < MemoryConfig::OUTPUT_Y_LATCH; ++i)
   {
     if (MemoryConfig::TIMER_SIZE == index)
     {
