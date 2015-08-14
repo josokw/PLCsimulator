@@ -515,17 +515,17 @@ void Processor::NE()
 
 void Processor::CCNTS()
 {
-  logDebug(clog, "CCNTS");
   if (nullptr == _pCounters)
   {
-    clog << "[Processor] no counters available" << std::endl;
+    setSRbit(ProcessorConfig::SR_STATUS_BIT::NO_COUNTERS);
   }
   else
   {
-    for (int i = 0; i < MemoryConfig::nCOUNTERS ; ++i)
+    logDebug(clog, "CCNTS");
+    for(auto& c: *_pCounters)
     {
-      (*_pCounters)[i].checkIncrement();
-      (*_pCounters)[i].checkReset();
+      c.checkIncrement();
+      c.checkReset();
     }
   }
 }

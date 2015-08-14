@@ -14,7 +14,8 @@ public:
   /// SR status bits
   enum class SR_STATUS_BIT {STACK_OVERFLOW = 0x01,
                             STACK_UNDERFLOW = 0x02,
-                            UNKNOWN_INSTRUCTION = 0x04};
+                            UNKNOWN_INSTRUCTION = 0x04,
+                            NO_COUNTERS = 0x08};
   /// Constructor maps symbolic names to instruction codes.
   ProcessorConfig();
   ProcessorConfig(const ProcessorConfig&) = delete;
