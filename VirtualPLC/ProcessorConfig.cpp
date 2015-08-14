@@ -51,7 +51,7 @@ void ProcessorConfig::setMapping(const std::string& symbolicName)
   }
 }
 
-int ProcessorConfig::getIC(const std::string& symbolicName) const
+int32_t ProcessorConfig::getIC(const std::string& symbolicName) const
 {
   auto cit(_symbolicInstructionToIC.find(symbolicName));
   if (cit == _symbolicInstructionToIC.cend())

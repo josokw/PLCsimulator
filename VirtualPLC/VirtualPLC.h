@@ -51,9 +51,9 @@ public:
    int getMaxX() const { return nX; }
    int getMaxY() const { return nY; }
 private:
-   /// Number of inputs
+   /// Number of inputs.
    static const int32_t nX = 8;
-   /// Number of outputs
+   /// Number of outputs.
    static const int32_t nY = 6;
    static const int32_t TICK = 100; // in msec
    static const int32_t RUN = 50; // in msec
@@ -64,10 +64,10 @@ private:
    std::array<Timer, MemoryConfig::nTIMERS> _timers;
    std::array<Counter, MemoryConfig::nCOUNTERS> _counters;
    Processor _processor;
-   /// Stores memory status
+   /// Stores memory status.
    bool _memoryIsLoaded;
-   /// Stores running status
-   std::atomic<bool> _isRunning;
+   /// Stores running status.
+   std::atomic_bool _isRunning;
    /// Stores the number of loops executed.
    unsigned long long _step;
    PeriodicTask _tickTask;

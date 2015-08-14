@@ -27,7 +27,7 @@ public:
   void setMapping(const std::string& symbolicName);
   /// Gets corresponding instruction code.
   /// @pre Instruction NOTDEF must be defined.
-  int getIC(std::string const& symbolicName) const;
+  int32_t getIC(std::string const& symbolicName) const;
 private:
   /// Next available instruction code
   int32_t _nextIC;

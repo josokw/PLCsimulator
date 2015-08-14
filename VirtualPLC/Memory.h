@@ -25,15 +25,15 @@ public:
   /// Fills memory with 0 values.
   void clear();
   /// Index operator.
-  data_t operator[](int index) const;
+  data_t operator[](int32_t index) const;
   /// Index opeartor.
-  data_t& operator[](int index);
+  data_t& operator[](int32_t index);
   /// Add next CONST INT
-  void addNextCONST(int value);
+  void addNextCONST(int32_t value);
   /// Add next CONST BOOL
   void addNextCONST(bool value);
   /// Add next VAR INT
-  void addNextVAR(int value);
+  void addNextVAR(int32_t value);
   /// Add next VAR BOOL
   void addNextVAR(bool value);
   /// Add next TMPVAR INT
@@ -41,15 +41,15 @@ public:
   /// Add next TMPVAR BOOL
   void addNextTMPVAR(bool value);
   /// Add next CODE
-  void addNextCODE(int value);
+  void addNextCODE(int32_t value);
   /// Get next available CONST address
-  int getNextCONSTaddress() const { return _constAddress; }
+  int32_t getNextCONSTaddress() const { return _constAddress; }
   /// Get next available VAR address
-  int getNextVARaddress() const { return _varAddress; }
+  int32_t getNextVARaddress() const { return _varAddress; }
   /// Get next available TMPVAR address
-  int getNextTMPVARaddress() const { return _tmpvarAddress; }
+  int32_t getNextTMPVARaddress() const { return _tmpvarAddress; }
   /// Get next available CODE address
-  int getNextCODEaddress() const { return _codeAddress; }
+  int32_t getNextCODEaddress() const { return _codeAddress; }
   /// Dump memory contents
   void dump(std::ostream& os) const;
 private:

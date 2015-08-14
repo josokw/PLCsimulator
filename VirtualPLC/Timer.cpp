@@ -9,10 +9,9 @@
 using namespace std;
 
 Timer::Timer()
-:  _pMemory(0)
-,  _id(0)
-{
-}
+  :  _pMemory{nullptr}
+  ,  _id{0}
+{}
 
 void Timer::mapToMemory(Memory& mem, int offst)
 {
@@ -36,8 +35,7 @@ void Timer::mapToMemory(Memory& mem, int offst)
 
 void Timer::tick()
 {
-   if ((*_pMemory)[_TEnable].actual)
-   {
+   if ((*_pMemory)[_TEnable].actual) {
       cerr << "[Timer" << _id << "] tick(): "
             << (*_pMemory)[_TC].previous << " "
             << (*_pMemory)[_TC].actual << " "
@@ -54,16 +52,16 @@ void Timer::tick()
       (*_pMemory)[_TS].actual = false;
    }
    else {
-   if ((*_pMemory)[_TEnable].actual) {
-      ++((*_pMemory)[_TN].integer);
-      if (((*_pMemory)[_TN].integer) > ((*_pMemory)[_TValue].integer)) {
-         (*_pMemory)[_TN].integer = (*_pMemory)[_TValue].integer;
-         (*_pMemory)[_TS].actual = true;
+      if ((*_pMemory)[_TEnable].actual) {
+         ++((*_pMemory)[_TN].integer);
+         if (((*_pMemory)[_TN].integer) > ((*_pMemory)[_TValue].integer)) {
+            (*_pMemory)[_TN].integer = (*_pMemory)[_TValue].integer;
+            (*_pMemory)[_TS].actual = true;
+         }
       }
-   }
-   else {
-      (*_pMemory)[_TN].integer = 0;
-      (*_pMemory)[_TS].actual = false;
-   }
+      else {
+         (*_pMemory)[_TN].integer = 0;
+         (*_pMemory)[_TS].actual = false;
+      }
    }
 }

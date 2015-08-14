@@ -5,8 +5,7 @@
 Counter::Counter()
   :  _pMemory{nullptr}
   ,  _id{0}
-{
-}
+{}
 
 void Counter::mapToMemory(Memory& mem, int32_t offst)
 {
@@ -28,8 +27,7 @@ void Counter::mapToMemory(Memory& mem, int32_t offst)
 
 void Counter::checkReset()
 {
-   if ((*_pMemory)[_CC].actual == false)
-   {
+   if ((*_pMemory)[_CC].actual == false) {
       (*_pMemory)[_CN].integer = 0;
       (*_pMemory)[_CC].set(true);
    }
@@ -37,10 +35,10 @@ void Counter::checkReset()
 
 void Counter::checkIncrement()
 {
-   if ((*_pMemory)[_CEnable].risingEdge())
-   {
+   if ((*_pMemory)[_CEnable].risingEdge()) {
       ++((*_pMemory)[_CN].integer);
       (*_pMemory)[_CEnable].set(false);
    }
-   (*_pMemory)[_CS].set((*_pMemory)[_CN].integer >= (*_pMemory)[_CValue].integer);
+   (*_pMemory)[_CS].set((*_pMemory)[_CN].integer
+                        >= (*_pMemory)[_CValue].integer);
 }

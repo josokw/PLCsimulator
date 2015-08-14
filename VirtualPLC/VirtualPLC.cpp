@@ -53,7 +53,7 @@ VirtualPLC::~VirtualPLC()
 
 void VirtualPLC::clear()
 {
-  lock_guard<std::mutex> lock(_mutexIO);
+  lock_guard<std::mutex> lock{_mutexIO};
   copy(&_memory[MemoryConfig::VARS_INIT],
       &_memory[MemoryConfig::VARS_INIT + MemoryConfig::VARS_SIZE],
       &_memory[MemoryConfig::VARS]);
@@ -112,7 +112,7 @@ bool VirtualPLC::writeBinFile(const std::string& fileName)
 
 void VirtualPLC::loadMemory(const Memory& mem)
 {
-  lock_guard<std::mutex> lock(_mutexIO);
+  lock_guard<std::mutex> lock{_mutexIO};
   _processor.loadMemory(mem);
   _memoryIsLoaded = true;
 }
@@ -155,9 +155,9 @@ void VirtualPLC::stop()
   }
 }
 
-void VirtualPLC::setX(int index, bool status)
+void VirtualPLC::setX(int32_t index, bool status)
 {
-  lock_guard<std::mutex> lock(_mutexIO);
+  lock_guard<std::mutex> lock{_mutexIO};
   _memory[MemoryConfig::INPUT_X].integer =
       status
       ? (_memory[MemoryConfig::INPUT_X].integer | (1 << index))

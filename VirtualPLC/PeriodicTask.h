@@ -14,17 +14,17 @@ class PeriodicTask
 public:
   template <typename C, typename F>
   PeriodicTask(C* object, F mf, int tms)
-    :  _tms(tms)
-    ,  _isAlive(true)
-    ,  _isRunning(false)
-    ,  _mutex()
-    ,  _condition()
-    ,  _thread((std::bind(&PeriodicTask::execute<C, F>, this, object, mf)))
+    :  _tms{tms}
+    ,  _isAlive{true}
+    ,  _isRunning{false}
+    ,  _mutex{}
+    ,  _condition{}
+    ,  _thread{std::bind(&PeriodicTask::execute<C, F>, this, object, mf)}
   {}
 
   ~PeriodicTask()
   {
-    std::unique_lock<std::mutex> lock(_mutex);
+    std::unique_lock<std::mutex> lock{_mutex};
     _condition.notify_one();
     _isAlive = false;
     lock.unlock();
@@ -34,7 +34,7 @@ public:
   template <typename C, typename F>
   void execute(C* object, F mf)
   {
-    std::unique_lock<std::mutex> lock(_mutex);
+    std::unique_lock<std::mutex> lock{_mutex};
     while (_isAlive)
     {
       while (!_isRunning)
@@ -55,14 +55,14 @@ public:
 
   void start()
   {
-    std::unique_lock<std::mutex> lock(_mutex);
+    std::unique_lock<std::mutex> lock{_mutex};
     _isRunning = true;
     _condition.notify_one();
   }
 
   void stop()
   {
-    std::unique_lock<std::mutex> lock(_mutex);
+    std::unique_lock<std::mutex> lock{_mutex};
     _isRunning = false;
   }
 

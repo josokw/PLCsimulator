@@ -21,10 +21,7 @@ Memory::Memory()
 
 void Memory::clear()
 {
-  for (auto& m: _memory)
-  {
-    m.integer = 0;
-  }
+  _memory.fill(0);
   _constAddress = MemoryConfig::CONSTANTS;
   _varAddress = MemoryConfig::VARS;
   _tmpvarAddress = MemoryConfig::TMPVARS;
