@@ -1,4 +1,5 @@
 #include "Processor.h"
+#include "Debug.h"
 #include "Counter.h"
 #include "MemoryConfig.h"
 #include "ProcessorConfig.h"
@@ -33,8 +34,10 @@ void Processor::run()
     _SR = 0;
     while (!_endOfProgramLoop && _SR == 0)
     {
-      decode();
-      execute();
+      if (decode())
+      {
+        execute();
+      }
     }
     _PC = MemoryConfig::ENTRYPOINT;
     _SP = MemoryConfig::STACK;
@@ -116,28 +119,21 @@ void Processor::addToInstructionLUT(const string& InstructionName,
   _instructionLUT[_pConfig->getIC(InstructionName)] = ins;
 }
 
-void Processor::decode()
+bool Processor::decode()
 {
   _IR = (*_pMemory)[_PC].integer;
-  ++_PC;
-  if (_IR < 0 || size_t(_IR) >= _instructionLUT.size())
+  if (_IR < 0 || static_cast<size_t>(_IR) >= _instructionLUT.size())
   {
-    _SR |= 1 << ProcessorConfig::UNKNOWN_INSTRUCTION;
-    clog << "** [Processor] decode() ERROR unknown instruction" << endl;
+    setSRbit(ProcessorConfig::SR_STATUS_BIT::UNKNOWN_INSTRUCTION);
+    return false;
   }
+  ++_PC;
+  return true;
 }
 
 void Processor::execute()
 {
-  if (_IR < 0 || size_t(_IR) >= _instructionLUT.size())
-  {
-    _SR |= 1 << ProcessorConfig::UNKNOWN_INSTRUCTION;
-    clog << "** [Processor] execute() ERROR unknown instruction code" << endl;
-  }
-  else
-  {
-    (this->*_instructionLUT[_IR])();
-  }
+  (this->*_instructionLUT[_IR])();
 }
 
 void Processor::push(int value)
@@ -155,9 +151,14 @@ Data<int> Processor::pop()
   return (*_pMemory)[--_SP];
 }
 
+void Processor::setSRbit(ProcessorConfig::SR_STATUS_BIT stat)
+{
+  _SR |= static_cast<int>(stat);
+}
+
 void Processor::NOTDEF()
 {
-  clog << "** NOTDEF" << endl;
+  logDebug(clog, "NOTDEF");
 }
 
 void Processor::LATCH()
@@ -178,7 +179,7 @@ void Processor::RESTORE()
 
 void Processor::INC()
 {
-  clog << "INC" << endl;
+  logDebug(clog, "INC");
   int addressRHS = (*_pMemory)[_PC].integer;
   ++_PC;
   ++(*_pMemory)[addressRHS].integer;
@@ -186,7 +187,7 @@ void Processor::INC()
 
 void Processor::DEC()
 {
-  clog << "DEC" << endl;
+  logDebug(clog, "DEC");
   int addressRHS = (*_pMemory)[_PC].integer;
   ++_PC;
   --(*_pMemory)[addressRHS].integer;
@@ -194,7 +195,7 @@ void Processor::DEC()
 
 void Processor::AND()
 {
-  clog << "AND" << endl;
+  logDebug(clog, "AND");
   int addressLHS = (*_pMemory)[_PC++].integer;
   int addressRHS = (*_pMemory)[_PC++].integer;
   push((*_pMemory)[addressRHS].actual && (*_pMemory)[addressLHS].actual);
@@ -202,7 +203,7 @@ void Processor::AND()
 
 void Processor::OR()
 {
-  clog << "OR" << endl;
+  logDebug(clog, "OR");
   int addressLHS = (*_pMemory)[_PC++].integer;
   int addressRHS = (*_pMemory)[_PC++].integer;
   push((*_pMemory)[addressRHS].actual || (*_pMemory)[addressLHS].actual);
@@ -210,7 +211,7 @@ void Processor::OR()
 
 void Processor::NOT()
 {
-  clog << "NOT" << endl;
+  logDebug(clog,"NOT");
   int addressRHS = (*_pMemory)[_PC].integer;
   ++_PC;
   push(!(*_pMemory)[addressRHS].actual);
@@ -218,7 +219,7 @@ void Processor::NOT()
 
 void Processor::SCNM()
 {
-  clog << "SCNM" << endl;
+  logDebug(clog, "SCNM");
   int destination = (*_pMemory)[_PC++].integer;
   bool value = (*_pMemory)[_SP-1].actual;
   (*_pMemory)[destination].set(value);
@@ -278,7 +279,7 @@ void Processor::SPUSH()
   (*_pMemory)[_PC++].get(address);
   if (_SP >= MemoryConfig::ENTRYPOINT - 1)
   {
-    _SR |= 1 << ProcessorConfig::STACK_OVERFLOW;
+    setSRbit(ProcessorConfig::SR_STATUS_BIT::STACK_OVERFLOW);
     clog << "** ERROR stack overflow" << endl;
   }
   else
@@ -295,7 +296,7 @@ void Processor::SPOP()
   (*_pMemory)[_PC++].get(address);
   if (_SP <= MemoryConfig::STACK - 1)
   {
-    _SR |= 1 << ProcessorConfig::STACK_UNDERFLOW;
+    setSRbit(ProcessorConfig::SR_STATUS_BIT::STACK_UNDERFLOW);
     clog << "** ERROR stack underflow" << endl;
   }
   else
@@ -313,7 +314,7 @@ void Processor::SPOPB()
   if (_SP <= MemoryConfig::STACK - 1)
   {
     clog << "** ERROR stack underflow" << endl;
-    _SR |= 1 << ProcessorConfig::STACK_UNDERFLOW;
+    setSRbit(ProcessorConfig::SR_STATUS_BIT::STACK_UNDERFLOW);
   }
   else
   {
@@ -327,7 +328,7 @@ void Processor::SPOPB()
 
 void Processor::SDUP()
 {
-  clog << "SDUP" << endl;
+  logDebug(clog, "SDUP");
   (*_pMemory)[_SP] = (*_pMemory)[_SP - 1];
   ++_SP;
 }
@@ -337,7 +338,7 @@ void Processor::SDROP()
   if (_SP <= MemoryConfig::STACK - 1)
   {
     clog << "** ERROR stack underflow" << endl;
-    _SR |= 1 << ProcessorConfig::STACK_UNDERFLOW;
+    setSRbit(ProcessorConfig::SR_STATUS_BIT::STACK_UNDERFLOW);
   }
   clog << "SDROP" << endl;
   --_SP;
@@ -354,7 +355,7 @@ void Processor::SCTOP()
 
 void Processor::SAND()
 {
-  clog << "SAND" << endl;
+  logDebug(clog, "SAND");
   (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].actual &&
       (*_pMemory)[_SP-1].actual);
   --_SP;
@@ -362,7 +363,7 @@ void Processor::SAND()
 
 void Processor::SOR()
 {
-  clog << "SOR" << endl;
+  logDebug(clog, "SOR");
   (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].actual ||
       (*_pMemory)[_SP-1].actual);
   --_SP;
@@ -370,7 +371,7 @@ void Processor::SOR()
 
 void Processor::SXOR()
 {
-  clog << "SXOR" << endl;
+  logDebug(clog, "SXOR");
   (*_pMemory)[_SP-2].set(((*_pMemory)[_SP-2].actual || (*_pMemory)[_SP-1].actual)
       && !((*_pMemory)[_SP-2].actual && (*_pMemory)[_SP-1].actual));
   --_SP;
@@ -378,13 +379,13 @@ void Processor::SXOR()
 
 void Processor::SNOT()
 {
-  clog << "SNOT" << endl;
+  logDebug(clog, "SNOT");
   (*_pMemory)[_SP-1].set(!(*_pMemory)[_SP-1].actual);
 }
 
 void Processor::STB()
 {
-  clog << "STB" << endl;
+  logDebug(clog, "STB");
   int addressTarget = (*_pMemory)[_PC++].integer;
   int bitNr =  (*_pMemory)[_PC++].integer;
   int address = (*_pMemory)[_PC++].integer;
@@ -412,7 +413,7 @@ void Processor::READX()
   {
     (*_pMemory)[addressTarget].set(false);
   }
-  clog << address << " inhoud " << (*_pMemory)[address].integer
+  clog << address << " contents " << (*_pMemory)[address].integer
        << " bitNr: " << bitNr << " to " << addressTarget << endl;
 }
 
@@ -442,7 +443,10 @@ void Processor::EOPL()
          << MemoryConfig::STACK << endl;
   }
   _endOfProgramLoop = true;
+  clog << "EOPL" << endl;
+#ifndef NDEBUG
   _pMemory->dump(cerr);
+#endif
 }
 
 void Processor::SHX()
@@ -463,7 +467,7 @@ void Processor::SHY()
 
 void Processor::GT()
 {
-  clog << "GT" << endl;
+  logDebug(clog, "GT");
   (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer >
       (*_pMemory)[_SP-1].integer);
   --_SP;
@@ -471,7 +475,7 @@ void Processor::GT()
 
 void Processor::GE()
 {
-  clog << "GE" << endl;
+  logDebug(clog, "GE");
   (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer >=
       (*_pMemory)[_SP-1].integer);
   --_SP;
@@ -479,7 +483,7 @@ void Processor::GE()
 
 void Processor::EQ()
 {
-  clog << "EQ" << endl;
+  logDebug(clog, "EQ");
   (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer ==
       (*_pMemory)[_SP-1].integer);
   --_SP;
@@ -487,7 +491,7 @@ void Processor::EQ()
 
 void Processor::LE()
 {
-  clog << "LE" << endl;
+  logDebug(clog, "LE");
   (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer <=
       (*_pMemory)[_SP-1].integer);
   --_SP;
@@ -495,7 +499,7 @@ void Processor::LE()
 
 void Processor::LT()
 {
-  clog << "LT" << endl;
+  logDebug(clog, "LT");
   (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer <
       (*_pMemory)[_SP-1].integer);
   --_SP;
@@ -503,7 +507,7 @@ void Processor::LT()
 
 void Processor::NE()
 {
-  clog << "NE" << endl;
+  logDebug(clog, "NE");
   (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer !=
       (*_pMemory)[_SP-1].integer);
   --_SP;
@@ -511,7 +515,7 @@ void Processor::NE()
 
 void Processor::CCNTS()
 {
-  clog << "CCNTS" << endl;
+  logDebug(clog, "CCNTS");
   if (nullptr == _pCounters)
   {
     clog << "[Processor] no counters available" << std::endl;

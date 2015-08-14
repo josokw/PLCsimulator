@@ -11,10 +11,10 @@ class ProcessorConfig
 public:
   /// Maximal number of instructions
   static const int MAX_INSTRUCTIONS = 128;
-  /// SR status bits index
-  static const int STACK_OVERFLOW = 0;
-  static const int STACK_UNDERFLOW = 1;
-  static const int UNKNOWN_INSTRUCTION = 2;
+  /// SR status bits
+  enum class SR_STATUS_BIT {STACK_OVERFLOW = 0x01,
+                            STACK_UNDERFLOW = 0x02,
+                            UNKNOWN_INSTRUCTION = 0x04};
   /// Constructor maps symbolic names to instruction codes.
   ProcessorConfig();
   ProcessorConfig(const ProcessorConfig&) = delete;

@@ -136,7 +136,9 @@ void Compiler::parse()
          cerr << "-- stopped at: '" << info.stop << "'" << endl << "--" << endl;
       }
       _memory = vpb.getResult();
+#ifndef NDEBUG
       _memory.dump(cerr);
+#endif
    }
    catch(std::exception& x)
    {

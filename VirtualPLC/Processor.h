@@ -33,8 +33,6 @@ public:
   int getPC() const { return _PC; }
   /// Returns actual value Status Register
   int getSR() const { return _SR; }
-  /// Returns Instruction Code for the related symbolic instruction name
-  int getICode(const std::string& SymbolicName) const;
 private:
   Memory* _pMemory;
   std::array<Counter, MemoryConfig::nCOUNTERS>* _pCounters;
@@ -57,8 +55,10 @@ private:
   void fillInstructionLUT();
   void addToInstructionLUT(const std::string& InstructionName, instruction ins);
   /// Decode instruction
-  void decode();
+  /// @return Valid instruction status
+  bool decode();
   /// Excecute decoded instruction
+  /// @pre Valid instruction code
   void execute();
   /// Push to stack
   void push(int value);
@@ -66,6 +66,8 @@ private:
   void push(bool value);
   /// Pull from stack
   data_t pop();
+  /// Set SR bit
+  void setSRbit(ProcessorConfig::SR_STATUS_BIT stat);
   // Instructions
   /// Not defined instruction
   void NOTDEF();

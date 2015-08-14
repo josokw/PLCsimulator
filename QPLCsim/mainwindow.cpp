@@ -14,8 +14,6 @@
 #include "QPlcDialog.h"
 // VirtualPLC lib headers
 #include "LibInfoVPLC.h"
-//#include "MemoryConfig.h"
-//#include "ProcessorConfig.h"
 #include "LibInfoCPLC.h"
 
 using namespace std;

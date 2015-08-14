@@ -18,6 +18,7 @@ CONFIG(debug, debug|release) {
 }
 CONFIG(release, debug|release) {
     TARGET = CompilerPLC
+    DEFINES += NDEBUG
 }
 
 SOURCES += \

@@ -11,6 +11,7 @@ CONFIG(debug, debug|release) {
 }
 CONFIG(release, debug|release) {
     TARGET = VirtualPLC
+    DEFINES += NDEBUG
 }
 
 SOURCES += \
@@ -32,7 +33,8 @@ HEADERS += \
     Data.h \
     Counter.h \
     PeriodicTask.h \
-    LibInfoVPLC.h
+    LibInfoVPLC.h \
+    Debug.h
 
 #unix {
 #    target.path = /usr/lib
