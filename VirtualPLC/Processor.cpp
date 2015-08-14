@@ -439,11 +439,10 @@ void Processor::EOPL()
 {
   if (_SP != MemoryConfig::STACK)
   {
-    clog << "** EOPL  SP = " << _SP << " should be: "
-         << MemoryConfig::STACK << endl;
+    setSRbit(ProcessorConfig::SR_STATUS_BIT::STACK_CORRUPTED);
   }
   _endOfProgramLoop = true;
-  clog << "EOPL" << endl;
+  logDebug(clog,"EOPL");
 #ifndef NDEBUG
   _pMemory->dump(cerr);
 #endif
