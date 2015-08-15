@@ -173,8 +173,8 @@ void Processor::RESTORE()
 {
   (*_pMemory)[MemoryConfig::OUTPUT_Y] =
       (*_pMemory)[MemoryConfig::OUTPUT_Y_LATCH];
-  //(*pMemory)[MemoryConfig::INPUT_X] =
-  //   (*pMemory)[MemoryConfig::INPUT_X_LATCH];
+  //(*_pMemory)[MemoryConfig::INPUT_X] =
+  //   (*_pMemory)[MemoryConfig::INPUT_X_LATCH];
 }
 
 void Processor::INC()
@@ -249,7 +249,7 @@ void Processor::SCST()
 void Processor::SCRS()
 {
   clog << "SCRS ";
-  int destination;
+  int32_t destination;
   bool value;
 
   (*_pMemory)[_PC++].get(destination);
@@ -266,8 +266,8 @@ void Processor::SCRS()
 void Processor::CPY()
 {
   clog << "CPY ";
-  int source = (*_pMemory)[_PC++].integer;
-  int destination = (*_pMemory)[_PC++].integer;
+  int32_t source = (*_pMemory)[_PC++].integer;
+  int32_t destination = (*_pMemory)[_PC++].integer;
   (*_pMemory)[destination] = (*_pMemory)[source];
   clog << source << " to address " << destination << endl;
 }
@@ -275,7 +275,7 @@ void Processor::CPY()
 void Processor::SPUSH()
 {
   clog << "SPUSH ";
-  int address;
+  int32_t address;
   (*_pMemory)[_PC++].get(address);
   if (_SP >= MemoryConfig::ENTRYPOINT - 1)
   {
@@ -292,7 +292,7 @@ void Processor::SPUSH()
 void Processor::SPOP()
 {
   clog << "SPOP ";
-  int address;
+  int32_t address;
   (*_pMemory)[_PC++].get(address);
   if (_SP <= MemoryConfig::STACK - 1)
   {
@@ -309,11 +309,10 @@ void Processor::SPOP()
 void Processor::SPOPB()
 {
   clog << "SPOPB ";
-  int address;
+  int32_t address;
   (*_pMemory)[_PC++].get(address);
   if (_SP <= MemoryConfig::STACK - 1)
   {
-    clog << "** ERROR stack underflow" << endl;
     setSRbit(ProcessorConfig::SR_STATUS_BIT::STACK_UNDERFLOW);
   }
   else
@@ -337,10 +336,9 @@ void Processor::SDROP()
 {
   if (_SP <= MemoryConfig::STACK - 1)
   {
-    clog << "** ERROR stack underflow" << endl;
     setSRbit(ProcessorConfig::SR_STATUS_BIT::STACK_UNDERFLOW);
   }
-  clog << "SDROP" << endl;
+  logDebug(clog, "SDROP");
   --_SP;
 }
 
@@ -386,9 +384,9 @@ void Processor::SNOT()
 void Processor::STB()
 {
   logDebug(clog, "STB");
-  int addressTarget = (*_pMemory)[_PC++].integer;
-  int bitNr =  (*_pMemory)[_PC++].integer;
-  int address = (*_pMemory)[_PC++].integer;
+  auto addressTarget = (*_pMemory)[_PC++].integer;
+  auto bitNr = (*_pMemory)[_PC++].integer;
+  auto address = (*_pMemory)[_PC++].integer;
   if ((*_pMemory)[address].actual)
   {
     (*_pMemory)[addressTarget].integer |= (1 << bitNr);
@@ -402,9 +400,9 @@ void Processor::STB()
 void Processor::READX()
 {
   clog << "READX ";
-  int address = MemoryConfig::INPUT_X_LATCH;
-  int bitNr =  (*_pMemory)[_PC++].integer;
-  int addressTarget = (*_pMemory)[_PC++].integer;
+  auto address = MemoryConfig::INPUT_X_LATCH;
+  auto bitNr = (*_pMemory)[_PC++].integer;
+  auto addressTarget = (*_pMemory)[_PC++].integer;
   if ((*_pMemory)[address].integer & (1 << bitNr))
   {
     (*_pMemory)[addressTarget].set(true);
@@ -420,9 +418,9 @@ void Processor::READX()
 void Processor::SETY()
 {
   clog << "SETY ";
-  int addressTarget = MemoryConfig::OUTPUT_Y_LATCH;
-  int bitNr =  (*_pMemory)[_PC++].integer;
-  int address = (*_pMemory)[_PC++].integer;
+  auto addressTarget = MemoryConfig::OUTPUT_Y_LATCH;
+  auto bitNr =  (*_pMemory)[_PC++].integer;
+  auto address = (*_pMemory)[_PC++].integer;
   if ((*_pMemory)[address].actual)
   {
     (*_pMemory)[addressTarget].integer |= (1 << bitNr);
