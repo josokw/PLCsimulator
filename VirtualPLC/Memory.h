@@ -8,6 +8,7 @@
 #include <iosfwd>
 
 using data_t = Data<int32_t>;
+using memory_t = std::array<data_t, MemoryConfig::MEM_SIZE>;
 
 class MemoryConfig;
 
@@ -54,7 +55,7 @@ public:
   void dump(std::ostream& os) const;
 private:
   bool _outOfMemory;
-  std::array<data_t, MemoryConfig::MEM_SIZE> _memory;
+  memory_t _memory;
   int32_t _constAddress;
   int32_t _varAddress;
   int32_t _tmpvarAddress;

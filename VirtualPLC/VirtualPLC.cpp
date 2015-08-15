@@ -23,18 +23,15 @@ VirtualPLC::VirtualPLC()
   ,  _tickTask{this, &VirtualPLC::tick, TICK}
   ,  _runTask{this, &VirtualPLC::run, RUN}
 {
-  // Map all timers to memory
-  size_t i = 0;
+  // Reinitialize all timers and related memory
+  auto id = 0;
   for (auto& timer: _timers)
   {
-    timer.setID(i);
-    timer.mapToMemory(_memory,
-                      MemoryConfig::TIMERS
-                      + i * MemoryConfig::TIMER_SIZE);
-    ++i;
+    timer = Timer(_memory, id++);
+    timer.mapToMemory();
   }
-  // Map all counters to memory
-  i = 0;
+  // Reintialize alll counters and related memory
+  auto i = 0;
   for (auto& counter: _counters)
   {
     counter.setID(i);

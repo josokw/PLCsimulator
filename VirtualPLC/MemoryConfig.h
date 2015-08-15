@@ -35,6 +35,7 @@ public:
   // Timers and Counters offsets
   static const int32_t TIMERS = OUTPUT_Y_LATCH - nTIMERS * TIMER_SIZE;
   static const int32_t COUNTERS = TIMERS - nCOUNTERS * COUNTER_SIZE;
+  static_assert(COUNTERS < MEM_SIZE, "Memory to small");
 };
 
 #endif // MEMORYCONFIG_H

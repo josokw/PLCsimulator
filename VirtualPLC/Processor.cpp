@@ -136,6 +136,7 @@ void Processor::execute()
   (this->*_instructionLUT[_IR])();
 }
 
+
 void Processor::push(int value)
 {
   (*_pMemory)[_SP++].integer = value;

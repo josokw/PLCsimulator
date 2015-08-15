@@ -16,6 +16,9 @@
 #include <thread>
 #include <vector>
 
+using counters_t = std::array<Counter, MemoryConfig::nCOUNTERS>;
+using timers_t = std::array<Timer, MemoryConfig::nTIMERS>;
+
 /// A VirtualPLC contains a processor, memory, timers and counters,
 /// and is able to execute the program stored in memory.
 /// Timers and counters are mapped to memory.
@@ -60,9 +63,10 @@ private:
    std::mutex _mutexIO;
    std::ifstream _plcBinFile;
    std::ofstream _plcBinFileOut;
+   /// "Hardware"
    Memory _memory;
-   std::array<Timer, MemoryConfig::nTIMERS> _timers;
-   std::array<Counter, MemoryConfig::nCOUNTERS> _counters;
+   timers_t _timers;
+   counters_t _counters;
    Processor _processor;
    /// Stores memory status.
    bool _memoryIsLoaded;

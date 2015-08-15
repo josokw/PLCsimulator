@@ -8,22 +8,23 @@
 
 using namespace std;
 
-Timer::Timer()
-  :  _pMemory{nullptr}
-  ,  _id{0}
+Timer::Timer(Memory &memory, int id)
+  :  _pMemory{&memory}
+  ,  _id{id}
+  ,  _TEnable{MemoryConfig::TIMERS
+              + id * MemoryConfig::TIMER_SIZE + FunctionConfig::TEnable}
+  ,  _TValue{MemoryConfig::TIMERS
+             + id * MemoryConfig::TIMER_SIZE + FunctionConfig::TValue}
+  ,  _TN{MemoryConfig::TIMERS
+         + id * MemoryConfig::TIMER_SIZE + FunctionConfig::TN}
+  ,  _TS{MemoryConfig::TIMERS
+         + id * MemoryConfig::TIMER_SIZE + FunctionConfig::TS}
+  ,  _TC{MemoryConfig::TIMERS
+         + id * MemoryConfig::TIMER_SIZE + FunctionConfig::TC}
 {}
 
-void Timer::mapToMemory(Memory& mem, int offst)
+void Timer::mapToMemory() const
 {
-   _pMemory = &mem;
-   _offset = offst;
-
-   //TEnable = MemoryConfig::TIMERS + id * MemoryConfig::TIMER_SIZE + FunctionConfig::TEnable;
-   _TEnable = _offset + FunctionConfig::TEnable;
-   _TValue = _offset + FunctionConfig::TValue;
-   _TN = _offset + FunctionConfig::TN;
-   _TS = _offset + FunctionConfig::TS;
-   _TC = _offset + FunctionConfig::TC;
    (*_pMemory)[_TEnable].actual = false;
    (*_pMemory)[_TEnable].previous = false;
    (*_pMemory)[_TValue].integer = 0;
@@ -33,7 +34,7 @@ void Timer::mapToMemory(Memory& mem, int offst)
    (*_pMemory)[_TC].previous = true;
 }
 
-void Timer::tick()
+void Timer::tick() const
 {
    if ((*_pMemory)[_TEnable].actual) {
       cerr << "[Timer" << _id << "] tick(): "

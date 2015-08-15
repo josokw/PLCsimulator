@@ -11,14 +11,15 @@ class Memory;
 class Timer
 {
 public:
-   Timer();
-   virtual ~Timer() = default;
-   /// Set timer id (0..N)
-   void setID(int32_t ID) { _id = ID; }
+   Timer() = default;
+   Timer(Memory& memory, int id);
+   Timer(const Timer& other) = default;
+   Timer& operator=(const Timer& other) = default;
+   ~Timer() = default;
    /// Maps timer to memory and initialises all internal registers.
-   void mapToMemory(Memory& mem, int32_t _offset);
+   void mapToMemory() const;
    /// Timer tick.
-   void tick();
+   void tick() const;
 private:
    Memory* _pMemory;
    int32_t _id;
