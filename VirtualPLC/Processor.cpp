@@ -189,7 +189,7 @@ void Processor::INC()
 void Processor::DEC()
 {
   logDebug(clog, "DEC");
-  int addressRHS = (*_pMemory)[_PC].integer;
+  auto addressRHS = (*_pMemory)[_PC].integer;
   ++_PC;
   --(*_pMemory)[addressRHS].integer;
 }
@@ -197,23 +197,23 @@ void Processor::DEC()
 void Processor::AND()
 {
   logDebug(clog, "AND");
-  int addressLHS = (*_pMemory)[_PC++].integer;
-  int addressRHS = (*_pMemory)[_PC++].integer;
+  auto addressLHS = (*_pMemory)[_PC++].integer;
+  auto addressRHS = (*_pMemory)[_PC++].integer;
   push((*_pMemory)[addressRHS].actual && (*_pMemory)[addressLHS].actual);
 }
 
 void Processor::OR()
 {
   logDebug(clog, "OR");
-  int addressLHS = (*_pMemory)[_PC++].integer;
-  int addressRHS = (*_pMemory)[_PC++].integer;
+  auto addressLHS = (*_pMemory)[_PC++].integer;
+  auto addressRHS = (*_pMemory)[_PC++].integer;
   push((*_pMemory)[addressRHS].actual || (*_pMemory)[addressLHS].actual);
 }
 
 void Processor::NOT()
 {
   logDebug(clog,"NOT");
-  int addressRHS = (*_pMemory)[_PC].integer;
+  auto addressRHS = (*_pMemory)[_PC].integer;
   ++_PC;
   push(!(*_pMemory)[addressRHS].actual);
 }
@@ -221,24 +221,24 @@ void Processor::NOT()
 void Processor::SCNM()
 {
   logDebug(clog, "SCNM");
-  int destination = (*_pMemory)[_PC++].integer;
-  bool value = (*_pMemory)[_SP-1].actual;
+  auto destination = (*_pMemory)[_PC++].integer;
+  auto value = (*_pMemory)[_SP-1].actual;
   (*_pMemory)[destination].set(value);
 }
 
 void Processor::SCNG()
 {
   clog << "SCNG" << endl;
-  int destination = (*_pMemory)[_PC++].integer;
-  bool value = (*_pMemory)[_SP-1].actual;
+  auto destination = (*_pMemory)[_PC++].integer;
+  auto value = (*_pMemory)[_SP-1].actual;
   (*_pMemory)[destination].set(!value);
 }
 
 void Processor::SCST()
 {
   clog << "SCST ";
-  int destination = (*_pMemory)[_PC++].integer;
-  bool value = (*_pMemory)[_SP-1].actual;
+  auto destination = (*_pMemory)[_PC++].integer;
+  auto value = (*_pMemory)[_SP-1].actual;
   if ((*_pMemory)[_SP-1].risingEdge())
   {
     (*_pMemory)[destination].set(true);
@@ -267,8 +267,8 @@ void Processor::SCRS()
 void Processor::CPY()
 {
   clog << "CPY ";
-  int32_t source = (*_pMemory)[_PC++].integer;
-  int32_t destination = (*_pMemory)[_PC++].integer;
+  auto source = (*_pMemory)[_PC++].integer;
+  auto destination = (*_pMemory)[_PC++].integer;
   (*_pMemory)[destination] = (*_pMemory)[source];
   clog << source << " to address " << destination << endl;
 }
@@ -346,7 +346,7 @@ void Processor::SDROP()
 void Processor::SCTOP()
 {
   clog << "SCTOP ";
-  int address;
+  int32_t address;
   (*_pMemory)[_PC++].get(address);
   (*_pMemory)[address] = (*_pMemory)[_SP-1];
   clog << (*_pMemory)[_SP-1].integer << " to address " << address << endl;

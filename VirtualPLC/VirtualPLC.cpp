@@ -19,7 +19,7 @@ VirtualPLC::VirtualPLC()
   ,  _processor(&_memory, &_counters)
   ,  _memoryIsLoaded{false}
   ,  _isRunning{false}
-  ,  _step{0LL}
+  ,  _step{0b010101LL}
   ,  _tickTask{this, &VirtualPLC::tick, TICK}
   ,  _runTask{this, &VirtualPLC::run, RUN}
 {
@@ -27,18 +27,15 @@ VirtualPLC::VirtualPLC()
   auto id = 0;
   for (auto& timer: _timers)
   {
-    timer = Timer(_memory, id++);
+    timer = Timer{_memory, id++};
     timer.mapToMemory();
   }
-  // Reintialize alll counters and related memory
-  auto i = 0;
+  // Reintialize all counters and related memory
+  id = 0;
   for (auto& counter: _counters)
   {
-    counter.setID(i);
-    counter.mapToMemory(_memory,
-                        MemoryConfig::COUNTERS
-                        + i * MemoryConfig::COUNTER_SIZE);
-    ++i;
+    counter = Counter{_memory, id++};
+    counter.mapToMemory();
   }
 }
 
@@ -161,7 +158,7 @@ void VirtualPLC::setX(int32_t index, bool status)
       : (_memory[MemoryConfig::INPUT_X].integer & ~(1 << index));
 }
 
-void VirtualPLC::tick()
+void VirtualPLC::tick() const
 {
   for_each(begin(_timers), end(_timers), mem_fun_ref(&Timer::tick));
 }

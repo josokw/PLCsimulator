@@ -8,20 +8,20 @@ class Memory;
 class Counter
 {
 public:
-  Counter();
+  Counter() = default;
+  Counter(Memory& memory, int id);
+  Counter(const Counter& other) = default;
+  Counter& operator=(const Counter& other) = default;
   ~Counter() = default;
-  /// Set counter id [0..N)
-  void setID(int32_t id) { _id = id; }
   /// Maps counter to memory and initialises all internal registers.
-  void mapToMemory(Memory& mem, int32_t offset);
+  void mapToMemory() const;
   /// Check reset CC
-  void checkReset();
+  void checkReset() const;
   /// Check increment
-  void checkIncrement();
+  void checkIncrement() const;
 private:
   Memory *_pMemory;
   int32_t _id;
-  int32_t _offset;
   int32_t _CEnable;
   int32_t _CValue;
   int32_t _CN;

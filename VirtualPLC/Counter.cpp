@@ -2,20 +2,23 @@
 #include "FunctionConfig.h"
 #include "Memory.h"
 
-Counter::Counter()
-  :  _pMemory{nullptr}
-  ,  _id{0}
+Counter::Counter(Memory& memory, int id)
+  :  _pMemory{&memory}
+  ,  _id{id}
+  ,  _CEnable{MemoryConfig::COUNTERS
+              + _id * MemoryConfig::COUNTER_SIZE + FunctionConfig::CEnable}
+  ,  _CValue{MemoryConfig::COUNTERS
+             + _id * MemoryConfig::COUNTER_SIZE + FunctionConfig::CValue}
+  ,   _CN{MemoryConfig::COUNTERS
+          + _id * MemoryConfig::COUNTER_SIZE + FunctionConfig::CN}
+  ,   _CS{MemoryConfig::COUNTERS
+          + _id * MemoryConfig::COUNTER_SIZE + FunctionConfig::CS}
+  ,   _CC{MemoryConfig::COUNTERS
+          + _id * MemoryConfig::COUNTER_SIZE + FunctionConfig::CS}
 {}
 
-void Counter::mapToMemory(Memory& mem, int32_t offst)
+void Counter::mapToMemory() const
 {
-   _pMemory = &mem;
-   _offset = offst;
-   _CEnable = _offset + FunctionConfig::CEnable;
-   _CValue = _offset + FunctionConfig::CValue;
-   _CN = _offset + FunctionConfig::CN;
-   _CS = _offset + FunctionConfig::CS;
-   _CC = _offset + FunctionConfig::CC;
    (*_pMemory)[_CEnable].actual = false;
    (*_pMemory)[_CEnable].previous = false;
    (*_pMemory)[_CValue].integer = 0;
@@ -25,7 +28,7 @@ void Counter::mapToMemory(Memory& mem, int32_t offst)
    (*_pMemory)[_CC].previous = true;
 }
 
-void Counter::checkReset()
+void Counter::checkReset() const
 {
    if ((*_pMemory)[_CC].actual == false) {
       (*_pMemory)[_CN].integer = 0;
@@ -33,7 +36,7 @@ void Counter::checkReset()
    }
 }
 
-void Counter::checkIncrement()
+void Counter::checkIncrement() const
 {
    if ((*_pMemory)[_CEnable].risingEdge()) {
       ++((*_pMemory)[_CN].integer);

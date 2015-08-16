@@ -77,7 +77,7 @@ private:
    PeriodicTask _tickTask;
    PeriodicTask _runTask;
    /// Updates all timers.
-   void tick();
+   void tick() const;
    void resetXs() { _memory[MemoryConfig::INPUT_X].integer = 0; }
    void resetYs() { _memory[MemoryConfig::OUTPUT_Y].integer = 0; }
 };
