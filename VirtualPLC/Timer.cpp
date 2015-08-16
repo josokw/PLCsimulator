@@ -72,6 +72,6 @@ void Timer::clear() const
        + _id * MemoryConfig::TIMER_SIZE,
        &(*_pMemory)[MemoryConfig::TIMERS_INIT]
        + (_id + 1) * MemoryConfig::TIMER_SIZE,
-       &(*_pMemory)[MemoryConfig::TIMERS_INIT]
+       &(*_pMemory)[MemoryConfig::TIMERS]
        + _id * MemoryConfig::TIMER_SIZE);
 }

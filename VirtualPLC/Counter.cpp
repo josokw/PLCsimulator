@@ -52,9 +52,9 @@ void Counter::checkIncrement() const
 void Counter::clear() const
 {
   copy(&(*_pMemory)[MemoryConfig::COUNTERS_INIT]
-      + _id * MemoryConfig::COUNTER_SIZE,
+       + _id * MemoryConfig::COUNTER_SIZE,
        &(*_pMemory)[MemoryConfig::COUNTERS_INIT
        + (_id + 1) * MemoryConfig::COUNTER_SIZE],
-       &(*_pMemory)[MemoryConfig::COUNTERS_INIT]
-      + _id * MemoryConfig::COUNTER_SIZE);
+       &(*_pMemory)[MemoryConfig::COUNTERS]
+       + _id * MemoryConfig::COUNTER_SIZE);
 }
