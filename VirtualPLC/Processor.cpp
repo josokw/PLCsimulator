@@ -12,10 +12,10 @@
 
 using namespace std;
 
-Processor::Processor(Memory* pMemory,
-                     std::array<Counter, MemoryConfig::nCOUNTERS>* pCounters)
-  :  _pMemory{pMemory}
-  ,  _pCounters{pCounters}
+Processor::Processor(Memory &memory,
+                     std::array<Counter, MemoryConfig::nCOUNTERS> &counters)
+  :  _memory(memory)
+  ,  _counters(counters)
   ,  _pConfig{new ProcessorConfig}
   ,  _PC{MemoryConfig::ENTRYPOINT}
   ,  _IR{0}
@@ -55,14 +55,14 @@ void Processor::run()
 
 void Processor::clearMemory()
 {
-  _pMemory->clear();
+  _memory.clear();
 }
 
 void Processor::loadMemory(const Memory& mem)
 {
   for (size_t i = 0; i < mem.size(); ++i)
   {
-    (*_pMemory)[i] = mem[i];
+    _memory[i] = mem[i];
   }
 }
 
@@ -121,7 +121,7 @@ void Processor::addToInstructionLUT(const string& InstructionName,
 
 bool Processor::decode()
 {
-  _IR = (*_pMemory)[_PC].integer;
+  _IR = _memory[_PC].integer;
   if (_IR < 0 || static_cast<size_t>(_IR) >= _instructionLUT.size())
   {
     setSRbit(ProcessorConfig::SR_STATUS_BIT::UNKNOWN_INSTRUCTION);
@@ -139,17 +139,17 @@ void Processor::execute()
 
 void Processor::push(int value)
 {
-  (*_pMemory)[_SP++].integer = value;
+  _memory[_SP++].integer = value;
 }
 
 void Processor::push(bool value)
 {
-  (*_pMemory)[_SP++].actual = value;
+  _memory[_SP++].actual = value;
 }
 
 Data<int> Processor::pop()
 {
-  return (*_pMemory)[--_SP];
+  return _memory[--_SP];
 }
 
 void Processor::setSRbit(ProcessorConfig::SR_STATUS_BIT stat)
@@ -164,84 +164,84 @@ void Processor::NOTDEF()
 
 void Processor::LATCH()
 {
-  (*_pMemory)[MemoryConfig::INPUT_X_LATCH] =
-      (*_pMemory)[MemoryConfig::INPUT_X];
-  (*_pMemory)[MemoryConfig::OUTPUT_Y_LATCH] =
-      (*_pMemory)[MemoryConfig::OUTPUT_Y];
+  _memory[MemoryConfig::INPUT_X_LATCH] =
+      _memory[MemoryConfig::INPUT_X];
+  _memory[MemoryConfig::OUTPUT_Y_LATCH] =
+      _memory[MemoryConfig::OUTPUT_Y];
 }
 
 void Processor::RESTORE()
 {
-  (*_pMemory)[MemoryConfig::OUTPUT_Y] =
-      (*_pMemory)[MemoryConfig::OUTPUT_Y_LATCH];
-  //(*_pMemory)[MemoryConfig::INPUT_X] =
-  //   (*_pMemory)[MemoryConfig::INPUT_X_LATCH];
+  _memory[MemoryConfig::OUTPUT_Y] =
+      _memory[MemoryConfig::OUTPUT_Y_LATCH];
+  //_memory[MemoryConfig::INPUT_X] =
+  //   _memory[MemoryConfig::INPUT_X_LATCH];
 }
 
 void Processor::INC()
 {
   logDebug(clog, "INC");
-  int addressRHS = (*_pMemory)[_PC].integer;
+  int addressRHS = _memory[_PC].integer;
   ++_PC;
-  ++(*_pMemory)[addressRHS].integer;
+  ++_memory[addressRHS].integer;
 }
 
 void Processor::DEC()
 {
   logDebug(clog, "DEC");
-  auto addressRHS = (*_pMemory)[_PC].integer;
+  auto addressRHS = _memory[_PC].integer;
   ++_PC;
-  --(*_pMemory)[addressRHS].integer;
+  --_memory[addressRHS].integer;
 }
 
 void Processor::AND()
 {
   logDebug(clog, "AND");
-  auto addressLHS = (*_pMemory)[_PC++].integer;
-  auto addressRHS = (*_pMemory)[_PC++].integer;
-  push((*_pMemory)[addressRHS].actual && (*_pMemory)[addressLHS].actual);
+  auto addressLHS = _memory[_PC++].integer;
+  auto addressRHS = _memory[_PC++].integer;
+  push(_memory[addressRHS].actual && _memory[addressLHS].actual);
 }
 
 void Processor::OR()
 {
   logDebug(clog, "OR");
-  auto addressLHS = (*_pMemory)[_PC++].integer;
-  auto addressRHS = (*_pMemory)[_PC++].integer;
-  push((*_pMemory)[addressRHS].actual || (*_pMemory)[addressLHS].actual);
+  auto addressLHS = _memory[_PC++].integer;
+  auto addressRHS = _memory[_PC++].integer;
+  push(_memory[addressRHS].actual || _memory[addressLHS].actual);
 }
 
 void Processor::NOT()
 {
   logDebug(clog,"NOT");
-  auto addressRHS = (*_pMemory)[_PC].integer;
+  auto addressRHS = _memory[_PC].integer;
   ++_PC;
-  push(!(*_pMemory)[addressRHS].actual);
+  push(!_memory[addressRHS].actual);
 }
 
 void Processor::SCNM()
 {
   logDebug(clog, "SCNM");
-  auto destination = (*_pMemory)[_PC++].integer;
-  auto value = (*_pMemory)[_SP-1].actual;
-  (*_pMemory)[destination].set(value);
+  auto destination = _memory[_PC++].integer;
+  auto value = _memory[_SP-1].actual;
+  _memory[destination].set(value);
 }
 
 void Processor::SCNG()
 {
   clog << "SCNG" << endl;
-  auto destination = (*_pMemory)[_PC++].integer;
-  auto value = (*_pMemory)[_SP-1].actual;
-  (*_pMemory)[destination].set(!value);
+  auto destination = _memory[_PC++].integer;
+  auto value = _memory[_SP-1].actual;
+  _memory[destination].set(!value);
 }
 
 void Processor::SCST()
 {
   clog << "SCST ";
-  auto destination = (*_pMemory)[_PC++].integer;
-  auto value = (*_pMemory)[_SP-1].actual;
-  if ((*_pMemory)[_SP-1].risingEdge())
+  auto destination = _memory[_PC++].integer;
+  auto value = _memory[_SP-1].actual;
+  if (_memory[_SP-1].risingEdge())
   {
-    (*_pMemory)[destination].set(true);
+    _memory[destination].set(true);
     clog << value << " to address " << destination;
   }
   clog << endl;
@@ -253,12 +253,12 @@ void Processor::SCRS()
   int32_t destination;
   bool value;
 
-  (*_pMemory)[_PC++].get(destination);
-  (*_pMemory)[_SP-1].get(value);
+  _memory[_PC++].get(destination);
+  _memory[_SP-1].get(value);
 
-  if ((*_pMemory)[_SP-1].risingEdge())
+  if (_memory[_SP-1].risingEdge())
   {
-    (*_pMemory)[destination].set(false);
+    _memory[destination].set(false);
     clog << value << " to address " << destination;
   }
   clog << endl;
@@ -267,9 +267,9 @@ void Processor::SCRS()
 void Processor::CPY()
 {
   clog << "CPY ";
-  auto source = (*_pMemory)[_PC++].integer;
-  auto destination = (*_pMemory)[_PC++].integer;
-  (*_pMemory)[destination] = (*_pMemory)[source];
+  auto source = _memory[_PC++].integer;
+  auto destination = _memory[_PC++].integer;
+  _memory[destination] = _memory[source];
   clog << source << " to address " << destination << endl;
 }
 
@@ -277,7 +277,7 @@ void Processor::SPUSH()
 {
   clog << "SPUSH ";
   int32_t address;
-  (*_pMemory)[_PC++].get(address);
+  _memory[_PC++].get(address);
   if (_SP >= MemoryConfig::ENTRYPOINT - 1)
   {
     setSRbit(ProcessorConfig::SR_STATUS_BIT::STACK_OVERFLOW);
@@ -285,8 +285,8 @@ void Processor::SPUSH()
   }
   else
   {
-    (*_pMemory)[_SP++] = (*_pMemory)[address];
-    clog << (*_pMemory)[address].integer << " from address " << address << endl;
+    _memory[_SP++] = _memory[address];
+    clog << _memory[address].integer << " from address " << address << endl;
   }
 }
 
@@ -294,7 +294,7 @@ void Processor::SPOP()
 {
   clog << "SPOP ";
   int32_t address;
-  (*_pMemory)[_PC++].get(address);
+  _memory[_PC++].get(address);
   if (_SP <= MemoryConfig::STACK - 1)
   {
     setSRbit(ProcessorConfig::SR_STATUS_BIT::STACK_UNDERFLOW);
@@ -302,8 +302,8 @@ void Processor::SPOP()
   }
   else
   {
-    (*_pMemory)[address] = (*_pMemory)[--_SP];
-    clog << (*_pMemory)[address].integer << " to address " << address << endl;
+    _memory[address] = _memory[--_SP];
+    clog << _memory[address].integer << " to address " << address << endl;
   }
 }
 
@@ -311,17 +311,17 @@ void Processor::SPOPB()
 {
   clog << "SPOPB ";
   int32_t address;
-  (*_pMemory)[_PC++].get(address);
+  _memory[_PC++].get(address);
   if (_SP <= MemoryConfig::STACK - 1)
   {
     setSRbit(ProcessorConfig::SR_STATUS_BIT::STACK_UNDERFLOW);
   }
   else
   {
-    clog << (*_pMemory)[address].previous << " "
-         << (*_pMemory)[address].actual << " changed to ";
-    (*_pMemory)[address].set((*_pMemory)[--_SP].actual);
-    clog << (*_pMemory)[address].previous << " " << (*_pMemory)[address].actual
+    clog << _memory[address].previous << " "
+         << _memory[address].actual << " changed to ";
+    _memory[address].set(_memory[--_SP].actual);
+    clog << _memory[address].previous << " " << _memory[address].actual
          << " to address " << address << endl;
   }
 }
@@ -329,7 +329,7 @@ void Processor::SPOPB()
 void Processor::SDUP()
 {
   logDebug(clog, "SDUP");
-  (*_pMemory)[_SP] = (*_pMemory)[_SP - 1];
+  _memory[_SP] = _memory[_SP - 1];
   ++_SP;
 }
 
@@ -347,54 +347,54 @@ void Processor::SCTOP()
 {
   clog << "SCTOP ";
   int32_t address;
-  (*_pMemory)[_PC++].get(address);
-  (*_pMemory)[address] = (*_pMemory)[_SP-1];
-  clog << (*_pMemory)[_SP-1].integer << " to address " << address << endl;
+  _memory[_PC++].get(address);
+  _memory[address] = _memory[_SP-1];
+  clog << _memory[_SP-1].integer << " to address " << address << endl;
 }
 
 void Processor::SAND()
 {
   logDebug(clog, "SAND");
-  (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].actual &&
-      (*_pMemory)[_SP-1].actual);
+  _memory[_SP-2].set(_memory[_SP-2].actual &&
+      _memory[_SP-1].actual);
   --_SP;
 }
 
 void Processor::SOR()
 {
   logDebug(clog, "SOR");
-  (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].actual ||
-      (*_pMemory)[_SP-1].actual);
+  _memory[_SP-2].set(_memory[_SP-2].actual ||
+      _memory[_SP-1].actual);
   --_SP;
 }
 
 void Processor::SXOR()
 {
   logDebug(clog, "SXOR");
-  (*_pMemory)[_SP-2].set(((*_pMemory)[_SP-2].actual || (*_pMemory)[_SP-1].actual)
-      && !((*_pMemory)[_SP-2].actual && (*_pMemory)[_SP-1].actual));
+  _memory[_SP-2].set((_memory[_SP-2].actual || _memory[_SP-1].actual)
+      && !(_memory[_SP-2].actual && _memory[_SP-1].actual));
   --_SP;
 }
 
 void Processor::SNOT()
 {
   logDebug(clog, "SNOT");
-  (*_pMemory)[_SP-1].set(!(*_pMemory)[_SP-1].actual);
+  _memory[_SP-1].set(!_memory[_SP-1].actual);
 }
 
 void Processor::STB()
 {
   logDebug(clog, "STB");
-  auto addressTarget = (*_pMemory)[_PC++].integer;
-  auto bitNr = (*_pMemory)[_PC++].integer;
-  auto address = (*_pMemory)[_PC++].integer;
-  if ((*_pMemory)[address].actual)
+  auto addressTarget = _memory[_PC++].integer;
+  auto bitNr = _memory[_PC++].integer;
+  auto address = _memory[_PC++].integer;
+  if (_memory[address].actual)
   {
-    (*_pMemory)[addressTarget].integer |= (1 << bitNr);
+    _memory[addressTarget].integer |= (1 << bitNr);
   }
   else
   {
-    (*_pMemory)[addressTarget].integer |= ~(1 << bitNr);
+    _memory[addressTarget].integer |= ~(1 << bitNr);
   }
 }
 
@@ -402,17 +402,17 @@ void Processor::READX()
 {
   clog << "READX ";
   auto address = MemoryConfig::INPUT_X_LATCH;
-  auto bitNr = (*_pMemory)[_PC++].integer;
-  auto addressTarget = (*_pMemory)[_PC++].integer;
-  if ((*_pMemory)[address].integer & (1 << bitNr))
+  auto bitNr = _memory[_PC++].integer;
+  auto addressTarget = _memory[_PC++].integer;
+  if (_memory[address].integer & (1 << bitNr))
   {
-    (*_pMemory)[addressTarget].set(true);
+    _memory[addressTarget].set(true);
   }
   else
   {
-    (*_pMemory)[addressTarget].set(false);
+    _memory[addressTarget].set(false);
   }
-  clog << address << " contents " << (*_pMemory)[address].integer
+  clog << address << " contents " << _memory[address].integer
        << " bitNr: " << bitNr << " to " << addressTarget << endl;
 }
 
@@ -420,17 +420,17 @@ void Processor::SETY()
 {
   clog << "SETY ";
   auto addressTarget = MemoryConfig::OUTPUT_Y_LATCH;
-  auto bitNr =  (*_pMemory)[_PC++].integer;
-  auto address = (*_pMemory)[_PC++].integer;
-  if ((*_pMemory)[address].actual)
+  auto bitNr =  _memory[_PC++].integer;
+  auto address = _memory[_PC++].integer;
+  if (_memory[address].actual)
   {
-    (*_pMemory)[addressTarget].integer |= (1 << bitNr);
+    _memory[addressTarget].integer |= (1 << bitNr);
   }
   else
   {
-    (*_pMemory)[addressTarget].integer &= ~(1 << bitNr);
+    _memory[addressTarget].integer &= ~(1 << bitNr);
   }
-  clog << address << " " << (*_pMemory)[address].integer << " "
+  clog << address << " " << _memory[address].integer << " "
        << bitNr << " " << addressTarget << endl;
 }
 
@@ -450,7 +450,7 @@ void Processor::EOPL()
 void Processor::SHX()
 {
   const bitset<numeric_limits<int>::digits + 1>
-      bs((*_pMemory)[MemoryConfig::INPUT_X].integer);
+      bs(_memory[MemoryConfig::INPUT_X].integer);
   const string binaryFormat(bs.to_string());
   clog << "SHX " << binaryFormat << endl;
 }
@@ -458,7 +458,7 @@ void Processor::SHX()
 void Processor::SHY()
 {
   const bitset<numeric_limits<int>::digits + 1>
-      bs((*_pMemory)[MemoryConfig::OUTPUT_Y].integer);
+      bs(_memory[MemoryConfig::OUTPUT_Y].integer);
   const string binaryFormat(bs.to_string());
   clog << "SHY " << binaryFormat << endl;
 }
@@ -466,61 +466,61 @@ void Processor::SHY()
 void Processor::GT()
 {
   logDebug(clog, "GT");
-  (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer >
-      (*_pMemory)[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer >
+      _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::GE()
 {
   logDebug(clog, "GE");
-  (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer >=
-      (*_pMemory)[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer >=
+      _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::EQ()
 {
   logDebug(clog, "EQ");
-  (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer ==
-      (*_pMemory)[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer ==
+      _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::LE()
 {
   logDebug(clog, "LE");
-  (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer <=
-      (*_pMemory)[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer <=
+      _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::LT()
 {
   logDebug(clog, "LT");
-  (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer <
-      (*_pMemory)[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer <
+      _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::NE()
 {
   logDebug(clog, "NE");
-  (*_pMemory)[_SP-2].set((*_pMemory)[_SP-2].integer !=
-      (*_pMemory)[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer !=
+      _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::CCNTS()
 {
-  if (nullptr == _pCounters)
-  {
-    setSRbit(ProcessorConfig::SR_STATUS_BIT::NO_COUNTERS);
-  }
-  else
+  //if (nullptr == _pCounters)
+  //{
+  //  setSRbit(ProcessorConfig::SR_STATUS_BIT::NO_COUNTERS);
+  //}
+  //else
   {
     logDebug(clog, "CCNTS");
-    for(auto& c: *_pCounters)
+    for(auto& c: _counters)
     {
       c.checkIncrement();
       c.checkReset();

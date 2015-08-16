@@ -34,7 +34,6 @@ struct VirtualPLCBuilder
   std::vector<Compiler::message_t>& messages;
 
   Memory memory;
-  const Processor processor;
   const ProcessorConfig processorConfig;
 
   int tmpvarIndex;
@@ -94,7 +93,6 @@ struct VirtualPLCBuilder
   VirtualPLCBuilder(std::vector<Compiler::message_t>& messages)
     :  messages(messages)
     ,  memory()
-    ,  processor(&memory, 0)
     ,  tmpvarIndex(0)
     ,  isFunction(false)
     ,  symbolsData()

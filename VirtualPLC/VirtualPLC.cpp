@@ -16,10 +16,10 @@ VirtualPLC::VirtualPLC()
   ,  _memory{}
   ,  _timers()
   ,  _counters()
-  ,  _processor(&_memory, &_counters)
+  ,  _processor{_memory, _counters}
   ,  _memoryIsLoaded{false}
   ,  _isRunning{false}
-  ,  _step{0b010101LL}
+  ,  _step{0LL}
   ,  _tickTask{this, &VirtualPLC::tick, TICK}
   ,  _runTask{this, &VirtualPLC::run, RUN}
 {

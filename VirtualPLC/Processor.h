@@ -21,8 +21,8 @@ typedef void (Processor::*instruction)();
 class Processor
 {
 public:
-  Processor(Memory* pMemory,
-            std::array<Counter, MemoryConfig::nCOUNTERS>* pCounters);
+  Processor(Memory& memory,
+            std::array<Counter, MemoryConfig::nCOUNTERS>& counters);
   Processor(Processor const& other) = delete;
   Processor& operator=(Processor const& other) = delete;
   ~Processor() = default;
@@ -35,8 +35,8 @@ public:
   /// Returns actual value Status Register
   int32_t getSR() const { return _SR; }
 private:
-  Memory* _pMemory;
-  std::array<Counter, MemoryConfig::nCOUNTERS>* _pCounters;
+  Memory& _memory;
+  std::array<Counter, MemoryConfig::nCOUNTERS>& _counters;
   std::unique_ptr<ProcessorConfig> _pConfig;
   /// Program Counter
   int32_t _PC;
@@ -69,7 +69,7 @@ private:
   data_t pop();
   /// Set SR bit
   void setSRbit(ProcessorConfig::SR_STATUS_BIT stat);
-  // Instructions
+  //--------------------------------------------------------------- Instructions
   /// Not defined instruction
   void NOTDEF();
   /// Latching X en Y values
