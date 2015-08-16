@@ -3,7 +3,6 @@
 #include "Memory.h"
 #include "MemoryConfig.h"
 #include "ProcessorConfig.h"
-
 #include <iostream>
 
 using namespace std;
@@ -65,4 +64,14 @@ void Timer::tick() const
          (*_pMemory)[_TS].actual = false;
       }
    }
+}
+
+void Timer::clear() const
+{
+  copy(&(*_pMemory)[MemoryConfig::TIMERS_INIT]
+       + _id * MemoryConfig::TIMER_SIZE,
+       &(*_pMemory)[MemoryConfig::TIMERS_INIT]
+       + (_id + 1) * MemoryConfig::TIMER_SIZE,
+       &(*_pMemory)[MemoryConfig::TIMERS_INIT]
+       + _id * MemoryConfig::TIMER_SIZE);
 }

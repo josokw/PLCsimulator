@@ -11,8 +11,10 @@
 
 class Counter;
 class Processor;
-// class Timer;
+class Timer;
 
+using timers_t = std::array<Timer, MemoryConfig::nTIMERS>;
+using counters_t = std::array<Counter, MemoryConfig::nCOUNTERS>;
 typedef void (Processor::*instruction)();
 
 /// Processor is able to use variables and constants, timers and counters.
@@ -22,7 +24,8 @@ class Processor
 {
 public:
   Processor(Memory& memory,
-            std::array<Counter, MemoryConfig::nCOUNTERS>& counters);
+            timers_t& _timers,
+            counters_t& counters);
   Processor(Processor const& other) = delete;
   Processor& operator=(Processor const& other) = delete;
   ~Processor() = default;
@@ -36,7 +39,8 @@ public:
   int32_t getSR() const { return _SR; }
 private:
   Memory& _memory;
-  std::array<Counter, MemoryConfig::nCOUNTERS>& _counters;
+  timers_t& _timers;
+  counters_t& _counters;
   std::unique_ptr<ProcessorConfig> _pConfig;
   /// Program Counter
   int32_t _PC;

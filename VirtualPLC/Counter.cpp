@@ -1,6 +1,9 @@
 #include "Counter.h"
 #include "FunctionConfig.h"
 #include "Memory.h"
+#include <algorithm>
+
+using namespace std;
 
 Counter::Counter(Memory& memory, int id)
   :  _pMemory{&memory}
@@ -44,4 +47,14 @@ void Counter::checkIncrement() const
    }
    (*_pMemory)[_CS].set((*_pMemory)[_CN].integer
                         >= (*_pMemory)[_CValue].integer);
+}
+
+void Counter::clear() const
+{
+  copy(&(*_pMemory)[MemoryConfig::COUNTERS_INIT]
+      + _id * MemoryConfig::COUNTER_SIZE,
+       &(*_pMemory)[MemoryConfig::COUNTERS_INIT
+       + (_id + 1) * MemoryConfig::COUNTER_SIZE],
+       &(*_pMemory)[MemoryConfig::COUNTERS_INIT]
+      + _id * MemoryConfig::COUNTER_SIZE);
 }

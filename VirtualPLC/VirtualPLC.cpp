@@ -13,10 +13,10 @@ VirtualPLC::VirtualPLC()
   :  _mutexIO{}
   ,  _plcBinFile{}
   ,  _plcBinFileOut{}
-  ,  _memory{}
+  ,  _memory()
   ,  _timers()
   ,  _counters()
-  ,  _processor{_memory, _counters}
+  ,  _processor{_memory, _timers, _counters}
   ,  _memoryIsLoaded{false}
   ,  _isRunning{false}
   ,  _step{0LL}
@@ -51,14 +51,18 @@ void VirtualPLC::clear()
   copy(&_memory[MemoryConfig::VARS_INIT],
       &_memory[MemoryConfig::VARS_INIT + MemoryConfig::VARS_SIZE],
       &_memory[MemoryConfig::VARS]);
-  copy(&_memory[MemoryConfig::COUNTERS_INIT],
-      &_memory[MemoryConfig::COUNTERS_INIT
-      + MemoryConfig::nCOUNTERS * MemoryConfig::COUNTER_SIZE],
-      &_memory[MemoryConfig::COUNTERS]);
-  copy(&_memory[MemoryConfig::TIMERS_INIT],
-      &_memory[MemoryConfig::TIMERS_INIT
-      + MemoryConfig::nTIMERS * MemoryConfig::TIMER_SIZE],
-      &_memory[MemoryConfig::TIMERS]);
+
+  for_each(begin(_counters), end(_counters), mem_fun_ref(&Counter::clear));
+  //copy(&_memory[MemoryConfig::COUNTERS_INIT],
+  //    &_memory[MemoryConfig::COUNTERS_INIT
+  //    + MemoryConfig::nCOUNTERS * MemoryConfig::COUNTER_SIZE],
+  //    &_memory[MemoryConfig::COUNTERS]);
+
+  for_each(begin(_timers), end(_timers), mem_fun_ref(&Timer::clear));
+  //copy(&_memory[MemoryConfig::TIMERS_INIT],
+  //    &_memory[MemoryConfig::TIMERS_INIT
+  //    + MemoryConfig::nTIMERS * MemoryConfig::TIMER_SIZE],
+  //    &_memory[MemoryConfig::TIMERS]);
 }
 
 bool VirtualPLC::readBinFile(const std::string& fileName)
@@ -158,7 +162,7 @@ void VirtualPLC::setX(int32_t index, bool status)
       : (_memory[MemoryConfig::INPUT_X].integer & ~(1 << index));
 }
 
-void VirtualPLC::tick() const
+void VirtualPLC::tick()
 {
   for_each(begin(_timers), end(_timers), mem_fun_ref(&Timer::tick));
 }

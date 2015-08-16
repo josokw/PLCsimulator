@@ -13,8 +13,10 @@
 using namespace std;
 
 Processor::Processor(Memory &memory,
-                     std::array<Counter, MemoryConfig::nCOUNTERS> &counters)
+                     timers_t &timers,
+                     counters_t &counters)
   :  _memory(memory)
+  ,  _timers(timers)
   ,  _counters(counters)
   ,  _pConfig{new ProcessorConfig}
   ,  _PC{MemoryConfig::ENTRYPOINT}
@@ -276,7 +278,7 @@ void Processor::CPY()
 void Processor::SPUSH()
 {
   clog << "SPUSH ";
-  int32_t address;
+  int32_t address{0};
   _memory[_PC++].get(address);
   if (_SP >= MemoryConfig::ENTRYPOINT - 1)
   {
@@ -293,7 +295,7 @@ void Processor::SPUSH()
 void Processor::SPOP()
 {
   clog << "SPOP ";
-  int32_t address;
+  int32_t address{0};
   _memory[_PC++].get(address);
   if (_SP <= MemoryConfig::STACK - 1)
   {
@@ -310,7 +312,7 @@ void Processor::SPOP()
 void Processor::SPOPB()
 {
   clog << "SPOPB ";
-  int32_t address;
+  int32_t address{0};
   _memory[_PC++].get(address);
   if (_SP <= MemoryConfig::STACK - 1)
   {
@@ -346,7 +348,7 @@ void Processor::SDROP()
 void Processor::SCTOP()
 {
   clog << "SCTOP ";
-  int32_t address;
+  int32_t address{0};
   _memory[_PC++].get(address);
   _memory[address] = _memory[_SP-1];
   clog << _memory[_SP-1].integer << " to address " << address << endl;
@@ -466,64 +468,51 @@ void Processor::SHY()
 void Processor::GT()
 {
   logDebug(clog, "GT");
-  _memory[_SP-2].set(_memory[_SP-2].integer >
-      _memory[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer > _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::GE()
 {
   logDebug(clog, "GE");
-  _memory[_SP-2].set(_memory[_SP-2].integer >=
-      _memory[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer >= _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::EQ()
 {
   logDebug(clog, "EQ");
-  _memory[_SP-2].set(_memory[_SP-2].integer ==
-      _memory[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer == _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::LE()
 {
   logDebug(clog, "LE");
-  _memory[_SP-2].set(_memory[_SP-2].integer <=
-      _memory[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer <= _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::LT()
 {
   logDebug(clog, "LT");
-  _memory[_SP-2].set(_memory[_SP-2].integer <
-      _memory[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer < _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::NE()
 {
   logDebug(clog, "NE");
-  _memory[_SP-2].set(_memory[_SP-2].integer !=
-      _memory[_SP-1].integer);
+  _memory[_SP-2].set(_memory[_SP-2].integer != _memory[_SP-1].integer);
   --_SP;
 }
 
 void Processor::CCNTS()
 {
-  //if (nullptr == _pCounters)
-  //{
-  //  setSRbit(ProcessorConfig::SR_STATUS_BIT::NO_COUNTERS);
-  //}
-  //else
+  logDebug(clog, "CCNTS");
+  for(auto& c: _counters)
   {
-    logDebug(clog, "CCNTS");
-    for(auto& c: _counters)
-    {
-      c.checkIncrement();
-      c.checkReset();
-    }
+    c.checkIncrement();
+    c.checkReset();
   }
 }

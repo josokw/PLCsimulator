@@ -19,8 +19,10 @@ public:
   void checkReset() const;
   /// Check increment
   void checkIncrement() const;
+  /// Reinitialize Counter with initial values.
+  void clear() const;
 private:
-  Memory *_pMemory;
+  Memory* _pMemory;
   int32_t _id;
   int32_t _CEnable;
   int32_t _CValue;

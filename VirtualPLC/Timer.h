@@ -20,6 +20,8 @@ public:
    void mapToMemory() const;
    /// Timer tick.
    void tick() const;
+   /// Reinitialize Timer wth initial values.
+   void clear() const;
 private:
    Memory* _pMemory;
    int32_t _id;
