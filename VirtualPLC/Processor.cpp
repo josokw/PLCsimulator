@@ -445,7 +445,7 @@ void Processor::EOPL()
   _endOfProgramLoop = true;
   logDebug(clog,"EOPL");
 #ifndef NDEBUG
-  _pMemory->dump(cerr);
+  _memory.dump(cerr);
 #endif
 }
 
