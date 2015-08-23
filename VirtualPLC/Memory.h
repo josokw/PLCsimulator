@@ -22,13 +22,13 @@ public:
   /// Constructor, creates MEM_SIZE memory locations.
   Memory();
   // Returns memory size
-  size_t size() const { return _memory.size(); }
+  size_t size() const noexcept { return _memory.size(); }
   /// Fills memory with 0 values.
   void clear();
   /// Index operator.
-  data_t operator[](int32_t index) const;
+  data_t operator[](int32_t index) const noexcept { return _memory[index]; }
   /// Index opeartor.
-  data_t& operator[](int32_t index);
+  data_t& operator[](int32_t index) { return _memory[index]; }
   /// Add next CONST INT
   void addNextCONST(int32_t value);
   /// Add next CONST BOOL
@@ -44,13 +44,13 @@ public:
   /// Add next CODE
   void addNextCODE(int32_t value);
   /// Get next available CONST address
-  int32_t getNextCONSTaddress() const { return _constAddress; }
+  int32_t getNextCONSTaddress() const noexcept { return _constAddress; }
   /// Get next available VAR address
-  int32_t getNextVARaddress() const { return _varAddress; }
+  int32_t getNextVARaddress() const noexcept { return _varAddress; }
   /// Get next available TMPVAR address
-  int32_t getNextTMPVARaddress() const { return _tmpvarAddress; }
+  int32_t getNextTMPVARaddress() const noexcept { return _tmpvarAddress; }
   /// Get next available CODE address
-  int32_t getNextCODEaddress() const { return _codeAddress; }
+  int32_t getNextCODEaddress() const noexcept { return _codeAddress; }
   /// Dump memory contents
   void dump(std::ostream& os) const;
 private:

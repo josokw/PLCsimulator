@@ -69,16 +69,6 @@ void Memory::addNextCODE(int32_t value)
   _memory[_codeAddress++].integer = value;
 }
 
-data_t Memory::operator[](int32_t index) const
-{
-  return _memory.at(index);
-}
-
-data_t& Memory::operator[](int32_t index)
-{
-  return _memory.at(index);
-}
-
 void Memory::dump(ostream& os) const
 {
   int index = 0;
