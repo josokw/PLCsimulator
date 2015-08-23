@@ -35,24 +35,26 @@ public:
    void clear();
    bool readBinFile(const std::string& fileName);
    bool writeBinFile(const std::string& fileName);
-   void loadMemory(const Memory& mem);
+   void loadMemory(const Memory& mem) noexcept;
    /// Put PLC in running mode
    void run();
    /// Test run status
-   bool isRunning() const { return _isRunning; }
+   bool isRunning() const noexcept { return _isRunning; }
    /// PLC continues running
    void start();
    /// Halt PLC, stop running
    void stop();
    /// Get output by index (0..nY)
-   bool getY(int32_t index) const {
+   bool getY(int32_t index) const noexcept {
      return _memory[MemoryConfig::OUTPUT_Y].integer & (1 << index); }
    /// Set input by index (0..nX) en status (true/false)
    void setX(int32_t index, bool status);
-   int32_t getYs() const { return _memory[MemoryConfig::OUTPUT_Y].integer; }
-   void setXs(int32_t status) { _memory[MemoryConfig::INPUT_X].integer = status; }
-   int getMaxX() const { return nX; }
-   int getMaxY() const { return nY; }
+   int32_t getYs() const noexcept {
+     return _memory[MemoryConfig::OUTPUT_Y].integer; }
+   void setXs(int32_t status) noexcept {
+     _memory[MemoryConfig::INPUT_X].integer = status; }
+   int getMaxX() const noexcept { return nX; }
+   int getMaxY() const noexcept { return nY; }
 private:
    /// Number of inputs.
    static const int32_t nX = 8;
@@ -71,15 +73,15 @@ private:
    /// Stores memory status.
    bool _memoryIsLoaded;
    /// Stores running status.
-   std::atomic_bool _isRunning;
+   volatile std::atomic_bool _isRunning;
    /// Stores the number of loops executed.
    unsigned long long _step;
    PeriodicTask _tickTask;
    PeriodicTask _runTask;
    /// Updates all timers.
    void tick();
-   void resetXs() { _memory[MemoryConfig::INPUT_X].integer = 0; }
-   void resetYs() { _memory[MemoryConfig::OUTPUT_Y].integer = 0; }
+   void resetXs() noexcept { _memory[MemoryConfig::INPUT_X].integer = 0; }
+   void resetYs() noexcept { _memory[MemoryConfig::OUTPUT_Y].integer = 0; }
 };
 
 #endif // VIRTUALPLC_H

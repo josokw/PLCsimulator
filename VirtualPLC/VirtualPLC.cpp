@@ -108,7 +108,7 @@ bool VirtualPLC::writeBinFile(const std::string& fileName)
   return true;
 }
 
-void VirtualPLC::loadMemory(const Memory& mem)
+void VirtualPLC::loadMemory(const Memory& mem) noexcept
 {
   lock_guard<std::mutex> lock{_mutexIO};
   _processor.loadMemory(mem);
