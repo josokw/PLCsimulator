@@ -1,8 +1,6 @@
 PLC simulator
 =============
 Written in C++/Qt. Uses Boost C++ classic Spirit parser.
-Create two subdirs: 'debug' and 'release' for containing the executable and the VirtualPLC lib (static linking).
-
 
 Input format
 ------------
