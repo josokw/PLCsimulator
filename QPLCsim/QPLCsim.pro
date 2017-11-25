@@ -3,12 +3,12 @@
 QT += widgets
 TARGET = PLCsim
 TEMPLATE = app
-CONFIG += c++11
+CONFIG += c++14
 
-INCLUDEPATH += ../../VirtualPLC
-DEPENDPATH += ../../VirtualPLC
-INCLUDEPATH += ../../CompilerPLC
-DEPENDPATH += ../../CompilerPLC
+INCLUDEPATH +=  ../VirtualPLC
+DEPENDPATH += ../VirtualPLC
+INCLUDEPATH += ../CompilerPLC
+DEPENDPATH += ../CompilerPLC
 
 SOURCES += main.cpp \
     mainwindow.cpp \
@@ -26,20 +26,21 @@ HEADERS += mainwindow.h \
     QLed.h \
     AppInfo.h \
     QSyntaxHL.h
+
 FORMS += mainwindow.ui
 RESOURCES += plcsim.qrc
 
 unix {
     CONFIG(debug, debug|release) {
-        LIBS += -L../../debug/VirtualPLC -lVirtualPLCdebug
-        PRE_TARGETDEPS += ../../debug/VirtualPLC/libVirtualPLCdebug.a
-        LIBS += -L../../debug/CompilerPLC -lCompilerPLCdebug
-        PRE_TARGETDEPS += ../../debug/CompilerPLC/libCompilerPLCdebug.a
+        LIBS += -L$$OUT_PWD/../VirtualPLC -lVirtualPLCdebug
+        #PRE_TARGETDEPS += ../debug/VirtualPLC/libVirtualPLCdebug.a
+        LIBS += -L$$OUT_PWD/../CompilerPLC -lCompilerPLCdebug
+        #PRE_TARGETDEPS += ../../debug/CompilerPLC/libCompilerPLCdebug.a
     }
     CONFIG(release, debug|release) {
-        LIBS += -L../../release/VirtualPLC -lVirtualPLC
-        PRE_TARGETDEPS += ../../release/VirtualPLC/libVirtualPLC.a
-        LIBS += -L../../release/CompilerPLC -lCompilerPLC
-        PRE_TARGETDEPS += ../../release/CompilerPLC/libCompilerPLC.a
+        LIBS += -L$$OUT_PWD/../VirtualPLC -lVirtualPLC
+        #PRE_TARGETDEPS += ../../release/VirtualPLC/libVirtualPLC.a
+        LIBS += -L$$OUT_PWD/../CompilerPLC -lCompilerPLC
+        #PRE_TARGETDEPS += ../../release/CompilerPLC/libCompilerPLC.a
     }
 }

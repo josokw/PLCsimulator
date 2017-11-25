@@ -7,11 +7,11 @@
 QT -= core gui
 
 TEMPLATE = lib
-CONFIG += c++11
+CONFIG += c++14
 CONFIG += staticlib
 
-INCLUDEPATH += ../../VirtualPLC
-DEPENDPATH += ../../VirtualPLC
+INCLUDEPATH += ../VirtualPLC
+DEPENDPATH += ../VirtualPLC
 
 CONFIG(debug, debug|release) {
     TARGET = CompilerPLCdebug
