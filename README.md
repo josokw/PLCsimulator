@@ -2,6 +2,7 @@ PLC simulator
 =============
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/159b0fe45cca4d0dbdf7ba7b6e5f6b8e)](https://www.codacy.com/project/josokw/PLCsimulator/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=josokw/PLCsimulator&amp;utm_campaign=Badge_Grade_Dashboard)
+[![CodeFactor](https://www.codefactor.io/repository/github/josokw/plcsimulator/badge/master)](https://www.codefactor.io/repository/github/josokw/plcsimulator/overview/master)
 
 Written in C++/Qt. Uses Boost C++ classic Spirit parser.
 
